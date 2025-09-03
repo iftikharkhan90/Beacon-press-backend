@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+require("dotenv").config();
 
 //For hashed password
 const hashPassword = async (plainpassword) => {

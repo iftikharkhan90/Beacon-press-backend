@@ -20,9 +20,7 @@ app.use(
   })
 );
 
-app.use("/beconsApi",mainRoutes)
-
 mongoose.connect(mongoURL).then(()=>console.log("DB is Connected")).catch((err) => console.log("Mongoose err"+err))
-app.use(Api,mainRoutes)
+app.use("/beconsApi",mainRoutes)
 app.listen(port,()=>console.log("Server is running!!"))
 

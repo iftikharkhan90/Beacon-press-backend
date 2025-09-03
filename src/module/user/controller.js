@@ -1,4 +1,5 @@
 const User = require("../../models/user.model");
+require('dotenv').config();
 const {
   hashPassword,
   comaprePassword,
@@ -6,7 +7,7 @@ const {
   sendEmail,
   genEmailVerfyToken,
   emailtokenVerfy,
-} = require("./user.service");
+} = require("./service");
 
 const userCreat = async (req, res) => {
   try {
@@ -29,12 +30,14 @@ const userCreat = async (req, res) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res
-        .status(409)
-        .json({ success: false, message: "User already exist!" });
+      return res.status(409).json({
+        success: false,
+        message: "User already exist!",
+      });
     }
     //Sure password should be gratorn than 8 charater
     if (!password || password.length < 8) {
+      //Usama is ki midelware banini hy!
       return res
         .status(400)
         .json({ error: "Password must be at least 8 characters" });

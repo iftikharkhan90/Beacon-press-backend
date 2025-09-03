@@ -1,6 +1,6 @@
 const express = require("express");
-const userModule = require("../modules/user/index");
-const scriptModule = require("../modules/script/index");
+const userModule = require("../module/user/index");
+const scriptModule = require("../module/script/index");
 
 const router = express.Router();
 router.use("/user", userModule);

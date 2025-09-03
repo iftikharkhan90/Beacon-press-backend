@@ -1,4 +1,5 @@
 const userScript = require("../../models/manuscript.model");
+require("dotenv").config();
 
 // Upload new manuscript
 const uploadManuscript = async (req, res) => {
