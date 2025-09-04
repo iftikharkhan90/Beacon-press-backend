@@ -1,10 +1,6 @@
-const {permanentFilePath,} = require("../../middleWare/fileHandle")
+const { permanentFilePath } = require("../../middleWare/fileHandle");
 const path = require("path");
 const fs = require("fs");
-require("dotenv").config();
-
-
-
 
 const savefile = (file) => {
   return new Promise((resolve, reject) => {
@@ -23,11 +19,9 @@ const savefile = (file) => {
     }
 
     const ext = path.extname(file.name).toLowerCase();
-    const hashFile = file.md5; 
+    const hashFile = file.md5;
     const newName = `${hashFile}${ext}`;
     const fileWay = path.join(permanentPath, newName);
-
-   
     file.mv(fileWay, (err) => {
       if (err) {
         return reject({ success: false, message: "Error uploading file!" });
@@ -35,11 +29,10 @@ const savefile = (file) => {
       resolve({
         success: true,
         message: "File uploaded!",
-        url: `${process.env.BASE_URL}/files/${newName}`
+        url: `${process.env.BASE_URL}/files/${newName}`,
       });
     });
   });
 };
- 
 
-module.exports = {savefile}
+module.exports = { savefile };

@@ -1,67 +1,71 @@
 const userScript = require("../../models/manuscript.model");
 require("dotenv").config();
-const {savefile} = require("./service")
+const { savefile } = require("./service");
 
 // Upload new manuscript
 const createScript = async (req, res) => {
   try {
     // extract text fields
     let manuScriptDetail = req.body.manuScriptDetail;
-let authors = req.body.authors;
-let reviewersDetails = req.body.reviewersDetails;
+    let authors = req.body.authors;
+    let reviewersDetails = req.body.reviewersDetails;
 
-try {
-  manuScriptDetail = JSON.parse(manuScriptDetail);
-  authors = JSON.parse(authors);
-  reviewersDetails = JSON.parse(reviewersDetails);
-} catch (err) {
-  return res.status(400).json({ success: false, message: "Invalid JSON" });
-}
-    const {
-      // manuScriptDetail,
-      // authors,
-      // reviewersDetails,
-      authorConflict,
-      conflictDescription,
-      dataAvailabilityStatement,
-    } = req.body;
+    const { authorConflict, conflictDescription, dataAvailabilityStatement } =
+      req.body;
 
     // extract files
-    const { scriptFile, figureTableFiles, supplementaryFiles } = req.files || {};
+    const { scriptFile, figureTableFiles, supplementaryFiles } =
+      req.files || {};
 
     // 🔹 Validation
     if (!manuScriptDetail) {
-      return res.status(400).json({ message: "Please provide manuscriptDetail" });
+      return res
+        .status(400)
+        .json({ message: "Please provide manuscriptDetail" });
     }
 
     if (!authors || authors.length < 1) {
-      return res.status(400).json({ message: "At least 1 author must be provided" });
+      return res
+        .status(400)
+        .json({ message: "At least 1 author must be provided" });
     }
 
     if (!reviewersDetails || reviewersDetails.length < 3) {
-      return res.status(400).json({ message: "At least 3 reviewers must be provided" });
+      return res
+        .status(400)
+        .json({ message: "At least 3 reviewers must be provided" });
     }
 
     if (authorConflict && !conflictDescription) {
-      return res.status(400).json({ message: "Please provide author conflict detail" });
+      return res
+        .status(400)
+        .json({ message: "Please provide author conflict detail" });
     }
 
     if (!dataAvailabilityStatement) {
-      return res.status(400).json({ message: "Please provide data availability statement" });
+      return res
+        .status(400)
+        .json({ message: "Please provide data availability statement" });
     }
 
-    
+    try {
+      manuScriptDetail = JSON.parse(manuScriptDetail);
+      authors = JSON.parse(authors);
+      reviewersDetails = JSON.parse(reviewersDetails);
+    } catch (err) {
+      return res.status(400).json({ success: false, message: "Invalid JSON" });
+    }
 
-//     manuScriptDetail = JSON.parse(manuScriptDetail);
-// authors = JSON.parse(authors);
-// reviewersDetails = JSON.parse(reviewersDetails);
+    //     manuScriptDetail = JSON.parse(manuScriptDetail);
+    // authors = JSON.parse(authors);
+    // reviewersDetails = JSON.parse(reviewersDetails);
     //    try {
     //   manuScriptDetail = JSON.parse(manuScriptDetail)
 
     //   authors =JSON.parse(authors)
 
     //   reviewersDetails = JSON.parse(reviewersDetails)
-          
+
     // } catch (e) {
     //   return res.status(400).json({
     //     success: false,
@@ -96,8 +100,12 @@ try {
       dataAvailabilityStatement,
       manuScriptFiles: {
         scriptFile: { url: scriptFileData.url }, // default name already in schema
-        figureTableFiles: figureTableFilesData ? { url: figureTableFilesData.url } : {},
-        supplementaryFiles: supplementaryFilesData ? { url: supplementaryFilesData.url } : {},
+        figureTableFiles: figureTableFilesData
+          ? { url: figureTableFilesData.url }
+          : {},
+        supplementaryFiles: supplementaryFilesData
+          ? { url: supplementaryFilesData.url }
+          : {},
       },
     });
 
