@@ -28,11 +28,11 @@ const userScehma = new mongoose.Schema({
   },
   isReviewer: { type: Boolean, default: false },
   isverfied: { type: Boolean, default: false },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    expires: 120, // 120 seconds = 2 minutes
-  },
+  // createdAt: {
+  //   type: Date,
+  //   default: Date.now,
+  //   expires: 120, // 120 seconds = 2 minutes
+  // },
 });
 
 const User = mongoose.model("User", userScehma);

@@ -1,13 +1,13 @@
 const User = require("../../models/user.model");
-require('dotenv').config();
+require("dotenv").config();
 const {
   hashPassword,
   comaprePassword,
-  generateToken,
   sendEmail,
   genEmailVerfyToken,
   emailtokenVerfy,
 } = require("./service");
+const { generateToken } = require("../../common/index");
 
 const userCreat = async (req, res) => {
   try {
@@ -82,10 +82,11 @@ const userLogin = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email }).select("+password");
+
     if (!user) {
       return res
-        .status(401)
-        .json({ success: false, message: "Invalid user eamil" });
+        .status(404)
+        .json({ success: false, message: "email does not exist" });
     }
 
     const isMatch = await comaprePassword(password, user.password);
@@ -94,7 +95,12 @@ const userLogin = async (req, res) => {
         .status(401)
         .json({ success: false, message: "Invalid user password" });
     }
-    //if user exist than login and genrate password
+    // if (user.isverfied === false) {
+    //   return res
+    //     .status(403)
+    //     .json({ success: false, message: "Please verify your email first" });
+    // }
+
     const token = generateToken(user);
     return res
       .status(200)
@@ -126,18 +132,23 @@ const userVerify = async (req, res) => {
 
     if (!token) {
       return res
-        .status(401)
-        .json({ success: false, message: "Token required" });
+        .status(400)
+        .json({ success: false, message: "Please enter token" });
     }
 
     const result = emailtokenVerfy(token);
-
     if (!result.success) {
-      return res.status(401).json({ success: false, message: result.error });
+      return res.status(401).json({
+        success: false,
+        message: "Please do not enter expire token",
+        err: result.error,
+      });
     }
 
     // Extract user ID from decoded token
     const userId = result.data.user;
+    console.log(result);
+    console.log(userId);
 
     //Find the user
     const user = await User.findByIdAndUpdate(
@@ -167,5 +178,4 @@ const userVerify = async (req, res) => {
     });
   }
 };
-
 module.exports = { userCreat, userLogin, userVerify };

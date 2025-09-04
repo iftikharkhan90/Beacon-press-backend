@@ -15,19 +15,6 @@ const comaprePassword = async (plainpassword, hashedpassword) => {
   return await bcrypt.compare(plainpassword, hashedpassword);
 };
 
-//For genrate jwt token
-const generateToken = (user) => {
-  const payload = {
-    id: user._id,
-  };
-  const secretKey = process.env.JWT_SECRET || "mysupersecretkeyBeconsPress";
-  const options = {
-    expiresIn: "1h",
-  };
-  const token = jwt.sign(payload, secretKey, options);
-  return token;
-};
-
 //For genrate email verfication
 const genEmailVerfyToken = (user) => {
   const payload = {
@@ -77,6 +64,7 @@ const sendEmail = async (userEmail, token) => {
   }
 };
 
+//For email verfytoken
 const emailtokenVerfy = (token) => {
   try {
     const secretkey = process.env.EMAIL_AUTHENTICATION;
@@ -97,7 +85,6 @@ const emailtokenVerfy = (token) => {
 module.exports = {
   hashPassword,
   comaprePassword,
-  generateToken,
   sendEmail,
   genEmailVerfyToken,
   emailtokenVerfy,
