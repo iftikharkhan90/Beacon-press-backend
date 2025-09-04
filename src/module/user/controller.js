@@ -11,7 +11,7 @@ const { generateToken } = require("../../common/index");
 
 const userCreat = async (req, res) => {
   try {
-    const {
+    const body = ({
       title,
       country,
       firstName,
@@ -24,7 +24,7 @@ const userCreat = async (req, res) => {
       role,
       isReviewer,
       isverfied,
-    } = req.body;
+    } = req.body);
 
     // check if user exist
     const existingUser = await User.findOne({ email });
@@ -102,9 +102,12 @@ const userLogin = async (req, res) => {
     // }
 
     const token = generateToken(user);
-    return res
-      .status(200)
-      .json({ success: true, message: "Login successful", token, user });
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token,
+      user,
+    });
   } catch (err) {
     res.status(500).json({
       success: false,

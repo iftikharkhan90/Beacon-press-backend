@@ -1,17 +1,44 @@
 const mongoose = require("mongoose");
 
 const scriptSchema = new mongoose.Schema({
-  manuScriptDetail: [
-    {
-      title: { type: String, required: true },
-      type: { type: String, required: true },
-      runningTitle: { type: String, required: true },
-      subject: { type: String, required: true },
-      abstract: { type: String, required: true },
-      correspondingAuthor: { type: String, required: true },
-      email: { type: String, required: true },
+  userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+  manuScriptDetail:{
+      title: {
+        type: String,
+        required: true,
+      },
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+      type: {
+        type: String,
+        required: true,
+      },
+      runningTitle: {
+        type: String,
+        required: true,
+      },
+      subject: {
+        type: String,
+        required: true,
+      },
+      abstract: {
+        type: String,
+        required: true,
+      },
+      correspondingAuthor: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+      },
     },
-  ],
   authors: [
     {
       fullname: { type: String, required: true },
@@ -33,11 +60,11 @@ const scriptSchema = new mongoose.Schema({
   conflictDescription: { type: String },
   dataAvailabilityStatement: { type: String, required: true },
 
-  manuScriptFiles: [
+  manuScriptFiles: 
     {
       scriptFile: {
-        name: { type: String, default: "Script File", required: true },
-        url: { type: String, required: true },
+        name: { type: String, default: "Script File"},
+        url: { type: String,  },
       },
       figureTableFiles: {
         name: { type: String, default: "Figure/Table File" },
@@ -48,8 +75,7 @@ const scriptSchema = new mongoose.Schema({
         url: { type: String },
       },
     },
-  ],
 });
 
-const userScript = mongoose.model("Script", scriptSchema);
+const userScript = mongoose.model("scripts", scriptSchema);
 module.exports = userScript;
