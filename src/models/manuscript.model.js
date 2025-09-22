@@ -1,81 +1,58 @@
 const mongoose = require("mongoose");
 
-const scriptSchema = new mongoose.Schema({
-  userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-      },
-  manuScriptDetail:{
-      title: {
-        type: String,
-        required: true,
-      },
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-      },
-      type: {
-        type: String,
-        required: true,
-      },
-      runningTitle: {
-        type: String,
-        required: true,
-      },
-      subject: {
-        type: String,
-        required: true,
-      },
-      abstract: {
-        type: String,
-        required: true,
-      },
-      correspondingAuthor: {
-        type: String,
-        required: true,
-      },
-      email: {
-        type: String,
-        required: true,
-      },
-    },
-  authors: [
-    {
-      fullname: { type: String, required: true },
-      email: { type: String, required: true },
-      country: { type: String, required: true },
-      affiliation: { type: String, required: true },
-    },
-  ],
-  reviewersDetails: [
-    {
-      fullname: { type: String, required: true },
-      email: { type: String, required: true },
-      country: { type: String, required: true },
-      affiliation: { type: String, required: true },
-    },
-  ],
-
-  authorConflict: { type: Boolean, default: false },
-  conflictDescription: { type: String },
-  dataAvailabilityStatement: { type: String, required: true },
-
-  manuScriptFiles: 
-    {
-      scriptFile: {
-        name: { type: String, default: "Script File"},
-        url: { type: String,  },
-      },
-      figureTableFiles: {
-        name: { type: String, default: "Figure/Table File" },
-        url: { type: String },
-      },
-      supplementaryFiles: {
-        name: { type: String, default: "Supplementary File" },
-        url: { type: String },
-      },
-    },
+const fileSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  url: { type: String, required: true },
 });
 
-const userScript = mongoose.model("scripts", scriptSchema);
-module.exports = userScript;
+const authorSchema = new mongoose.Schema({
+  fullName: { type: String, required: true },
+  email: { type: String, required: true },
+  country: { type: String, required: true },
+  affiliation: { type: String, required: true },
+});
+
+const reviewerSchema = new mongoose.Schema({
+  fullName: { type: String, required: true },
+  email: { type: String, required: true },
+  country: { type: String, required: true },
+  affiliation: { type: String, required: true },
+});
+
+const manuscriptDetailsSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  type: { type: String, required: true },
+  runningTitle: { type: String, required: true },
+  subject: { type: String, required: true },
+  abstract: { type: String, required: true },
+  correspondingName: { type: String, required: true },
+  correspondingEmail: { type: String, required: true },
+  code: { type: Number, required: false },
+});
+
+const manuscriptSchema = new mongoose.Schema(
+  {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+
+    manuscriptDetails: { type: manuscriptDetailsSchema, required: true },
+
+    authors: { type: [authorSchema], required: true },
+
+    reviewers: { type: [reviewerSchema], required: true },
+
+    conflictOfInterest: { type: Boolean, required: true },
+
+    conflictDescription: { type: String, default: "" },
+
+    dataAvailability: { type: String, required: true },
+
+    manuscriptFiles: {
+      manuscript: { type: fileSchema, required: true },
+      figuresDetails: { type: [fileSchema], default: [] },
+      supplementaryDetails: { type: [fileSchema], default: [] },
+    },
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("Manuscript", manuscriptSchema);

@@ -3,6 +3,11 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 require("dotenv").config();
+const User = require("../../models/user.model");
+const { resetPasswordTemplate } = require("../../utils/emailTemplates");
+const { sendEmail } = require("../../common/emailService");
+const EMAIL_SECRET =
+  process.env.EMAIL_AUTHENTICATION || "mysupersecretkeyBeconsPress";
 
 //For hashed password
 const hashPassword = async (plainpassword) => {
@@ -15,65 +20,81 @@ const comaprePassword = async (plainpassword, hashedpassword) => {
   return await bcrypt.compare(plainpassword, hashedpassword);
 };
 
+const sendResetPasswordLink = async (email) => {
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return { success: false, message: "User not found" };
+    }
+
+    const resetToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.RESET_TOKEN_SECRET,
+      { expiresIn: "10m" }
+    );
+
+    const resetLink = `http://localhost:5173/reset-password?token=${resetToken}`;
+
+    await sendEmail(
+      user.email,
+      "Reset your password",
+      resetPasswordTemplate(resetLink)
+    );
+
+    return {
+      success: true,
+      message: "Reset Password link generated",
+      resetLink,
+    };
+  } catch (error) {
+    console.error("Reset error:", error.message);
+    return { success: false, message: "Reset failed, please try again later" };
+  }
+};
+
+const resetPasswordService = async (token, password) => {
+  try {
+    const decoded = jwt.verify(token, process.env.RESET_TOKEN_SECRET);
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await User.findByIdAndUpdate(decoded.id, { password: hashedPassword });
+
+    return { success: true, message: "Password reset successfully" };
+  } catch (error) {
+    console.error("Reset password error:", error.message);
+    return {
+      success: false,
+      message: "Password reset failed, please try again later",
+    };
+  }
+};
+
 //For genrate email verfication
 const genEmailVerfyToken = (user) => {
   const payload = {
     user: user._id,
   };
-  const secretKey =
-    process.env.EMAIL_AUTHENTICATION || "mysupersecretkeyBeconsPress";
 
   const options = {
     expiresIn: "1h",
   };
-  const otp = jwt.sign(payload, secretKey, options);
+  const otp = jwt.sign(payload, EMAIL_SECRET, options);
   return otp;
-};
-
-//For email send
-const sendEmail = async (userEmail, token) => {
-  try {
-    let transporter = nodemailer.createTransport({
-      service: "gmail",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.OWNER_EMAIL,
-        pass: process.env.APP_PASS,
-      },
-    });
-
-    let mailOptions = {
-      from: process.env.OWNER_EMAIL,
-      to: userEmail,
-      subject: "Verify your email",
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; border-radius: 8px;">
-          <h2 style="color: #4CAF50;">🔐 OTP Verification</h2>
-          <p>Here is your OTP code:</p>
-          <p style="font-size: 24px; font-weight: bold; color: #ff5733;">${token}</p>
-          <p>This code will expire in <b>5 minutes</b>.</p>
-        </div>
-      `,
-    };
-    // use sendMail, not sendEmail
-    const info = await transporter.sendMail(mailOptions);
-    return info; // info contains messageId, accepted, rejected, etc.
-  } catch (err) {
-    throw new Error(": " + err.message + ".Your Email is not correct");
-  }
 };
 
 //For email verfytoken
 const emailtokenVerfy = (token) => {
   try {
-    const secretkey = process.env.EMAIL_AUTHENTICATION;
-    const decode = jwt.verify(token, secretkey);
+    const decode = jwt.verify(token, process.env.RESET_TOKEN_SECRET);
+    console.log("decode",decode)
     return {
       success: true,
       data: decode,
     };
   } catch (err) {
+    console.log(err);
     return {
       success: false,
       data: null,
@@ -88,4 +109,6 @@ module.exports = {
   sendEmail,
   genEmailVerfyToken,
   emailtokenVerfy,
+  sendResetPasswordLink,
+  resetPasswordService,
 };

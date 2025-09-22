@@ -3,15 +3,20 @@ require("dotenv").config();
 const {
   hashPassword,
   comaprePassword,
-  sendEmail,
   genEmailVerfyToken,
   emailtokenVerfy,
+  sendResetPasswordLink,
+  sendEmail,
 } = require("./service");
 const { generateToken } = require("../../common/index");
+const { otpTemplate } = require("../../utils/emailTemplates");
 
-const userCreat = async (req, res) => {
+// =============================
+// Create User (Signup)
+// =============================
+const userCreate = async (req, res) => {
   try {
-    const body = ({
+    const {
       title,
       country,
       firstName,
@@ -24,27 +29,28 @@ const userCreat = async (req, res) => {
       role,
       isReviewer,
       isverfied,
-    } = req.body);
+    } = req.body;
 
-    // check if user exist
+    // check if user exists
     const existingUser = await User.findOne({ email });
-
     if (existingUser) {
       return res.status(409).json({
         success: false,
-        message: "User already exist!",
+        message: "User already exists!",
       });
     }
-    //Sure password should be gratorn than 8 charater
+
+    // password validation
     if (!password || password.length < 8) {
-      //Usama is ki midelware banini hy!
       return res
         .status(400)
-        .json({ error: "Password must be at least 8 characters" });
+        .json({ success: false, message: "Password must be at least 8 characters" });
     }
-    //make password hashed
-    const cryptedpassword = await hashPassword(password);
-    // save user with hashed password
+
+    // hash password
+    const cryptedPassword = await hashPassword(password);
+
+    // create user
     const user = await User.create({
       title,
       country,
@@ -54,124 +60,100 @@ const userCreat = async (req, res) => {
       affiliation,
       email,
       phone,
-      password: cryptedpassword,
+      password: cryptedPassword,
       role,
       isReviewer,
       isverfied,
     });
 
+    // send verification email
     const OTP = genEmailVerfyToken(user);
-    const eamil_info = await sendEmail(email, OTP);
+await sendEmail(user.email, "Verify your email", otpTemplate(OTP));
+
     return res.status(201).json({
       success: true,
-      message: "User created",
-      user: user,
-      email_info: JSON.stringify(eamil_info),
-    });
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      error: "server error" + err.message,
-    });
-  }
-};
-
-//For user login
-const userLogin = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email }).select("+password");
-
-    if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "email does not exist" });
-    }
-
-    const isMatch = await comaprePassword(password, user.password);
-    if (!isMatch) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Invalid user password" });
-    }
-    // if (user.isverfied === false) {
-    //   return res
-    //     .status(403)
-    //     .json({ success: false, message: "Please verify your email first" });
-    // }
-
-    const token = generateToken(user);
-    return res.status(200).json({
-      success: true,
-      message: "Login successful",
-      token,
+      message: "User created successfully",
       user,
     });
   } catch (err) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: "Server error: " + err.message,
     });
   }
 };
 
-//For resend
-// const reSendEmail = async(req,res)=>{
-//   try{
-//     const {isSend} = req.params;
-//     if(isSend === true){
-//       const otp = genrateOTP()
-//       const email_info
-//     }
-
-//   }catch(err){
-//     err
-//   }
-
-const userVerify = async (req, res) => {
+// =============================
+// Get User by ID
+// =============================
+const getUserById = async (req, res) => {
   try {
-    const { token } = req.body;
+    const user = await User.findById(req.params.id);
+    return res.status(200).json({
+      success: true,
+      message: "User fetched successfully",
+      data: user,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
 
-    if (!token) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Please enter token" });
+// =============================
+// Update User
+// =============================
+const updateUser = async (req, res) => {
+  try {
+    const { password, ...rest } = req.body;
+
+    if (password) {
+      rest.password = await hashPassword(password);
     }
 
-    const result = emailtokenVerfy(token);
-    if (!result.success) {
-      return res.status(401).json({
-        success: false,
-        message: "Please do not enter expire token",
-        err: result.error,
-      });
-    }
-
-    // Extract user ID from decoded token
-    const userId = result.data.user;
-    console.log(result);
-    console.log(userId);
-
-    //Find the user
-    const user = await User.findByIdAndUpdate(
-      userId,
-      {
-        $set: { isverfied: true },
-        $unset: { createdAt: "" },
-      },
-      { new: true }
-    );
+    const user = await User.findByIdAndUpdate(req.params.id, rest, { new: true });
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
     return res.status(200).json({
       success: true,
-      message: "User verified successfully",
+      message: "User updated successfully",
+      data: user,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// =============================
+// User Login
+// =============================
+const userLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Email does not exist" });
+    }
+
+    const isMatch = await comaprePassword(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Invalid password" });
+    }
+
+    // Optional: check email verification
+    // if (!user.isverfied) {
+    //   return res.status(403).json({ success: false, message: "Please verify your email first" });
+    // }
+
+    const token = generateToken(user);
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token,
       user,
     });
   } catch (err) {
@@ -181,4 +163,137 @@ const userVerify = async (req, res) => {
     });
   }
 };
-module.exports = { userCreat, userLogin, userVerify };
+
+// =============================
+// Forgot Password
+// =============================
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Email not found" });
+    }
+
+    const response = await sendResetPasswordLink(email);
+
+    if (response.success) {
+      return res.status(200).json(response);
+    } else {
+      return res.status(400).json(response);
+    }
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      success: false,
+      message: "Error in forgotPassword: " + error.message,
+    });
+  }
+};
+
+// =============================
+// Reset Password
+// =============================
+const resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!password || password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters",
+      });
+    }
+
+    // decode token and get user id
+    const result = emailtokenVerfy(token);
+    if (!result.success) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid or expired token",
+        err: result.error,
+      });
+    }
+    const userId = result.data.id;
+    console.log("userId",userId)
+    const hashedPassword = await hashPassword(password);
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset successfully",
+    });
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      success: false,
+      message: "Error in resetPassword: " + error.message,
+    });
+  }
+};
+
+// =============================
+// Verify User (Email Verification)
+// =============================
+const userVerify = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(400).json({ success: false, message: "Token required" });
+    }
+
+    const result = emailtokenVerfy(token);
+    if (!result.success) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid or expired token",
+        err: result.error,
+      });
+    }
+
+    const userId = result.data.user;
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $set: { isverfied: true }, $unset: { createdAt: "" } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User verified successfully",
+      user,
+    });
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      message: "Error in userVerify: " + err.message,
+    });
+  }
+};
+
+module.exports = {
+  userCreate,
+  userLogin,
+  userVerify,
+  getUserById,
+  updateUser,
+  forgotPassword,
+  resetPassword,
+};

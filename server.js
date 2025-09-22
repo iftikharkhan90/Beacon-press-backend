@@ -9,6 +9,7 @@ const {permanentFilePath,temporariyFilePath} = require("./src/middleWare/fileHan
 
 const app = express()
 const port = process.env.PORT
+console.log("port",port)
 const mongoURL = process.env.MONGO_URL 
 const Api = process.env.API
 const tempath = temporariyFilePath()
@@ -32,6 +33,6 @@ app.use(
 );
 
 mongoose.connect(mongoURL).then(()=>console.log("DB is Connected")).catch((err) => console.log("Mongoose err"+err))
-app.use("/beconsApi",mainRoutes)
+app.use("/api",mainRoutes)
 app.listen(port,()=>console.log("Server is running!!"))
 
