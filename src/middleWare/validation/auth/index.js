@@ -2,8 +2,8 @@ const User = require("../../../models/user.model");
 const jwt = require('jsonwebtoken');
 const verifyTokenAndAttachUser = async (req, res, next) => {
   if (!req.headers.authorization) {
-    return next(
-      ("UNAUTHORIZED", "Unauthorized: No token attached")
+    return res.status(400).json(
+      ( "Unauthorized: No token attached")
     );
   }
 
@@ -18,13 +18,14 @@ const verifyTokenAndAttachUser = async (req, res, next) => {
     }
 
     req.userId = user?.id;
-    console.log("  req.userId", req.userId);
     req.user = user;
 
     next();
   } catch (error) {
-    console.log("Error:", error);
-    return next("Unauthorizeed", "Invalid token");
+     return res.status(400).json({
+      success: false,
+      message: "Invalid token ",
+    });
   }
 };
 

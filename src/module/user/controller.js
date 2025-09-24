@@ -42,9 +42,10 @@ const userCreate = async (req, res) => {
 
     // password validation
     if (!password || password.length < 8) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Password must be at least 8 characters" });
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters",
+      });
     }
 
     // hash password
@@ -68,7 +69,7 @@ const userCreate = async (req, res) => {
 
     // send verification email
     const OTP = genEmailVerfyToken(user);
-await sendEmail(user.email, "Verify your email", otpTemplate(OTP));
+    await sendEmail(user.email, "Verify your email", otpTemplate(OTP));
 
     return res.status(201).json({
       success: true,
@@ -110,10 +111,14 @@ const updateUser = async (req, res) => {
       rest.password = await hashPassword(password);
     }
 
-    const user = await User.findByIdAndUpdate(req.params.id, rest, { new: true });
+    const user = await User.findByIdAndUpdate(req.params.id, rest, {
+      new: true,
+    });
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     return res.status(200).json({
@@ -135,18 +140,22 @@ const userLogin = async (req, res) => {
 
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
-      return res.status(404).json({ success: false, message: "Email does not exist" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Email does not exist" });
     }
 
     const isMatch = await comaprePassword(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ success: false, message: "Invalid password" });
+      return res
+        .status(401)
+        .json({
+          success: false,
+          message: "Invalid password",
+          password: user.password,
+        });
     }
 
-    // Optional: check email verification
-    // if (!user.isverfied) {
-    //   return res.status(403).json({ success: false, message: "Please verify your email first" });
-    // }
 
     const token = generateToken(user);
 
@@ -173,7 +182,9 @@ const forgotPassword = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ success: false, message: "Email not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Email not found" });
     }
 
     const response = await sendResetPasswordLink(email);
@@ -184,7 +195,7 @@ const forgotPassword = async (req, res) => {
       return res.status(400).json(response);
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Error in forgotPassword: " + error.message,
@@ -216,7 +227,7 @@ const resetPassword = async (req, res) => {
       });
     }
     const userId = result.data.id;
-    console.log("userId",userId)
+    console.log("userId", userId);
     const hashedPassword = await hashPassword(password);
 
     const user = await User.findByIdAndUpdate(
@@ -226,7 +237,9 @@ const resetPassword = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     return res.status(200).json({
@@ -234,7 +247,7 @@ const resetPassword = async (req, res) => {
       message: "Password reset successfully",
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Error in resetPassword: " + error.message,
@@ -250,7 +263,9 @@ const userVerify = async (req, res) => {
     const { token } = req.body;
 
     if (!token) {
-      return res.status(400).json({ success: false, message: "Token required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Token required" });
     }
 
     const result = emailtokenVerfy(token);
@@ -271,7 +286,9 @@ const userVerify = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     return res.status(200).json({
@@ -280,7 +297,7 @@ const userVerify = async (req, res) => {
       user,
     });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).json({
       success: false,
       message: "Error in userVerify: " + err.message,

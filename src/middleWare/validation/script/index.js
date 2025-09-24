@@ -1,25 +1,23 @@
 const Joi = require("joi");
 const scriptValidationSchema = require("./schema");
 
-const validateScriptRequest = (data) => {
+const validateScriptRequest = (req, res, next) => {
+  let data = req.body;
+
   const { error, value } = scriptValidationSchema.validate(data, {
     abortEarly: false,
     stripUnknown: true,
   });
 
   if (error) {
-    console.log(error);
-    const errorMessages = error.details.map((detail) => detail.message);
-    return {
-      valid: false,
-      errors: errorMessages,
-    };
+    return res.status(400).json({
+      success: false,
+      errors: error.details[0].message,
+    });
   }
+  req.validatedData = value;
 
-  return {
-    valid: true,
-    data: value,
-  };
+  next();
 };
 
 const preprocessBody = (req, res, next) => {
@@ -36,7 +34,6 @@ const preprocessBody = (req, res, next) => {
     if (req.body.reviewers && typeof req.body.reviewers === "string") {
       req.body.reviewers = JSON.parse(req.body.reviewers);
     }
-    // Convert conflictOfInterest to boolean
     if (
       req.body.conflictOfInterest &&
       typeof req.body.conflictOfInterest === "string"
@@ -44,28 +41,25 @@ const preprocessBody = (req, res, next) => {
       req.body.conflictOfInterest = req.body.conflictOfInterest === "true";
     }
   } catch (err) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Invalid JSON in request body" });
+    return res.status(400).json({
+      success: false,
+      message: "Invalid JSON in request body",
+    });
   }
   next();
 };
 
-
 const validateFiles = (req, res, next) => {
   const fileSchema = Joi.object({
-    manuscript: Joi.object().required().messages({
-      "any.required": "Manuscript file is required",
-    }),
+    manuscript: Joi.object().required(),
     figuresDetails: Joi.any().optional(),
     supplementaryDetails: Joi.any().optional(),
   });
-
   const { error } = fileSchema.validate(req.files || {}, { abortEarly: false });
   if (error) {
     return res.status(400).json({
       success: false,
-      message: error.details.map((err) => err.message).join(", "),
+      message: error,
     });
   }
   next();

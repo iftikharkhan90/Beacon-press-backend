@@ -1,21 +1,22 @@
 const Manuscript = require("../../models/manuscript.model");
+const { saveFile } = require("./service")
 
-const savefile = async (file) => {
-  if (!file) return null;
-  return {
-    name: file.originalname,
-    url: `/uploads/${file.filename}`,
-  };
-};
+// const savefile = async (file) => {
+//   if (!file) return null;
+//   return {
+//     name: file.name,
+//     url: `/uploads/${file.filename}`,
+//   };
+// };
 
-const handleFiles = async (files) => {
-  if (!files) return [];
-  if (!Array.isArray(files)) files = [files];
-  return files.map((file) => ({
-    name: file.originalname,
-    url: `/uploads/${file.filename}`,
-  }));
-};
+// const handleFiles = async (files) => {
+//   if (!files) return [];
+//   if (!Array.isArray(files)) files = [files];
+//   return files.map((file) => ({
+//     name: file.name,
+//     url: `/uploads/${file.name}`,
+//   }));
+// };
 
 const createScript = async (req, res) => {
   try {
@@ -30,12 +31,13 @@ const createScript = async (req, res) => {
 
     const { manuscript, figuresDetails, supplementaryDetails } =
       req.files || {};
+      
 
-    const manuscriptFileData = manuscript ? await savefile(manuscript) : null;
-    const figuresFilesData = await handleFiles(figuresDetails);
-    const supplementaryFilesData = await handleFiles(supplementaryDetails);
+    const manuScriptFileData = manuscript ? await saveFile(manuscript) : null;
+    const figuresFilesData = await saveFile(figuresDetails);
+    const supplementaryFilesData = await saveFile(supplementaryDetails);
 
-    if (!manuscriptFileData) {
+    if (!manuScriptFileData) {
       return res.status(400).json({
         success: false,
         message: "Manuscript file is required",
@@ -43,7 +45,7 @@ const createScript = async (req, res) => {
     }
 
     const manuscriptFiles = {
-      manuscript: manuscriptFileData,
+      manuscript: manuScriptFileData,
       figuresDetails: figuresFilesData || [],
       supplementaryDetails: supplementaryFilesData || [],
     };
@@ -68,7 +70,7 @@ const createScript = async (req, res) => {
     console.error(err);
     return res.status(500).json({
       success: false,
-      message: "Server error: " + err.message,
+      message: err,
     });
   }
 };
