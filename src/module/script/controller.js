@@ -1,23 +1,6 @@
 const Manuscript = require("../../models/manuscript.model");
 const { saveFile } = require("./service")
 
-// const savefile = async (file) => {
-//   if (!file) return null;
-//   return {
-//     name: file.name,
-//     url: `/uploads/${file.filename}`,
-//   };
-// };
-
-// const handleFiles = async (files) => {
-//   if (!files) return [];
-//   if (!Array.isArray(files)) files = [files];
-//   return files.map((file) => ({
-//     name: file.name,
-//     url: `/uploads/${file.name}`,
-//   }));
-// };
-
 const createScript = async (req, res) => {
   try {
     let {
@@ -75,4 +58,30 @@ const createScript = async (req, res) => {
   }
 };
 
-module.exports = { createScript };
+
+
+const getScript = async (req, res) => {
+  try {
+    const user = req.user; 
+
+    const script = await Manuscript.find({ userId: user._id })  
+      .populate("userId");  
+
+    if (!script) {
+      return res.status(400).json({ success: false, message: "No script exists for this user" });
+    }
+
+    return res.status(200).json(
+      { success: true, manuscript: script }
+    );
+  } catch (err) {
+    console.error("Error:", err);
+    return res.status(400).json(
+      { 
+      success: false, error: err.message 
+    });
+  }
+};
+
+
+module.exports = { createScript,getScript };

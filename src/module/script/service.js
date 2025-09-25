@@ -1,57 +1,6 @@
 const path = require("path");
 const fs = require("fs");
 
-// const savewwfile = (file) => {
-//   return new Promise((resolve, reject) => {
-//     try {
-//       if (!file) {
-//         return reject({ success: false, message: "No file uploaded!" });
-//       }
-
-//       if (file.truncated) {
-//         return reject({ success: false, message: "File too large!" });
-//       }
-
-//       // Allowed file types
-//       const allowedTypes = [
-//         "application/pdf",
-//         "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // DOCX
-//       ];
-//       if (!allowedTypes.includes(file.mimetype)) {
-//         return reject({ success: false, message: "Invalid file type!" });
-//       }
-
-//   const permpath = path.join(__dirname, "../../upload");
-
-//   if (!fs.existsSync(permpath)) {
-//     fs.mkdirSync(permpath, { recursive: true });
-//   }
-
-//       const ext = path.extname(file.name).toLowerCase();
-//       const newName = `${file.name}-${Date.now()}${ext}`;
-//       const fileWay = path.join(permpath, newName);
-
-//       file.mv(fileWay, (err) => {
-//         if (err) {
-//           return reject({ success: false, message: "Error uploading file!" });
-//         }
-//         resolve({
-//           success: true,
-//           message: "File uploaded!",
-//           url: `${process.env.BASE_URL}/files/${newName}`,
-//           name: file.name,
-//           mimetype: file.mimetype,
-//           size: file.size,
-//         });
-//       });
-//     } catch (err) {
-//       console.log(err);
-//       reject({ success: false, message: err.message });
-//     }
-//   });
-// };
-// //////////////////////
-
 const saveFile = async (file) => {
   if (!file) return null;
 

@@ -1,5 +1,7 @@
 const User = require("../../../models/user.model");
 const jwt = require('jsonwebtoken');
+
+
 const verifyTokenAndAttachUser = async (req, res, next) => {
   if (!req.headers.authorization) {
     return res.status(400).json(
@@ -14,11 +16,12 @@ const verifyTokenAndAttachUser = async (req, res, next) => {
 
     const user = await User.findById(req.user.id);
     if (!user) {
-      return next("Failed", "User not found");
+      return res.status(400).json("Failed", "User not found");
     }
 
     req.userId = user?.id;
     req.user = user;
+  
 
     next();
   } catch (error) {

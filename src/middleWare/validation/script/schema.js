@@ -8,7 +8,7 @@ const manuscriptDetailsSchema = Joi.object({
   abstract: Joi.string().trim().required(),
   correspondingName: Joi.string().trim().required(),
   correspondingEmail: Joi.string().email().lowercase().trim().required(),
-  code: Joi.number().integer().optional(),
+  code: Joi.string().trim().optional(),
 });
 
 const authorSchema = Joi.object({

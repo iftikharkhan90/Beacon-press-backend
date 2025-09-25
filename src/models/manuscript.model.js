@@ -1,3 +1,4 @@
+const { string } = require("joi");
 const mongoose = require("mongoose");
 
 const fileSchema = new mongoose.Schema({
@@ -27,7 +28,7 @@ const manuscriptDetailsSchema = new mongoose.Schema({
   abstract: { type: String, required: true },
   correspondingName: { type: String, required: true },
   correspondingEmail: { type: String, required: true },
-  code: { type: Number, required: false },
+  code: { type: String, required: false },
 });
 
 const manuscriptSchema = new mongoose.Schema(

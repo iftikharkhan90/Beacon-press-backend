@@ -1,5 +1,5 @@
 const express = require("express");
-const { createScript } = require("./controller");
+const { createScript ,getScript} = require("./controller");
 const {
   verifyTokenAndAttachUser,
 } = require("../../middleWare/validation/auth");
@@ -21,5 +21,12 @@ router.post(
   ],
   createScript
 );
+
+router.get("/getScript",
+  [
+    verifyTokenAndAttachUser,
+  ],
+getScript
+)
 
 module.exports = router;

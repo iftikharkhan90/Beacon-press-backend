@@ -10,14 +10,14 @@ const filePath = (app) => {
     fs.mkdirSync(permpath, { recursive: true });
   }
 
-  // ✅ Serve uploaded files
+
   app.use("/files", express.static(permpath));
 
-  // ✅ File upload middleware
+
   app.use(
     fileUpload({
       useTempFiles: false,
-      limits: { fileSize: 2 * 1024 * 1024 }, // 2MB max
+      limits: { fileSize: 2 * 1024 * 1024 }, 
       abortOnLimit: true,
     })
   );
