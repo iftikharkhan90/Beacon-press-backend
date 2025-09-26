@@ -12,8 +12,8 @@ exports.createContact = async (req, res) => {
     // Nodemailer setup (example with Gmail, better use SendGrid/SMTP in prod)
     let transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // true for 465, false for 587
+  port: 587,
+  secure: false, // true for 465, false for 587
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -24,7 +24,7 @@ exports.createContact = async (req, res) => {
     // Mail options
     let mailOptions = {
       from: `"${fullName}" <${emailAddress}>`,
-      to: "muhammadasifrana445@gmail.com", // website owner's email
+      to: "masifrana445@gmail.com", // website owner's email
       subject: "New Contact Form Submission",
       html: `
         <h3>New Contact Form Submission</h3>
