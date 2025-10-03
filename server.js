@@ -24,4 +24,4 @@ mongoose
   .then(() => console.log("DB is Connected"))
   .catch((err) => console.log("Mongoose err" + err));
 app.use("/api", mainRoutes);
-app.listen(port, () => console.log("Server is running!!"));
+module.exports = app;
