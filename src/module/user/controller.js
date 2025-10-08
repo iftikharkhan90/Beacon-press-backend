@@ -68,8 +68,9 @@ const userCreate = async (req, res) => {
     });
 
     // send verification email
-    const OTP = genEmailVerfyToken(user);
-    await sendEmail(user.email, "Verify your email", otpTemplate(OTP));
+    
+    // const OTP = genEmailVerfyToken(user);
+    // await sendEmail(user.email, "Verify your email", otpTemplate(OTP));
 
     return res.status(201).json({
       success: true,
