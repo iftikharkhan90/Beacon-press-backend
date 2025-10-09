@@ -17,10 +17,8 @@ app.use(
     credentials: true, 
   })
 );
-// ===========================
-//This is imporatent but now this is just commpnet out for just deployemet
-// filePath(app);
-// ===========================
+
+filePath(app);
 
 mongoose
   .connect(mongoURL)
