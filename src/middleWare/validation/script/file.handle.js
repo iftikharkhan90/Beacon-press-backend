@@ -4,7 +4,7 @@ const express = require("express");
 const fileUpload = require("express-fileupload");
 
 const filePath = (app) => {
-  const permpath = path.join(__dirname, "../../../upload");
+  const permpath = path.join(__dirname, "../../../tmp/uploads");
 
   if (!fs.existsSync(permpath)) {
     fs.mkdirSync(permpath, { recursive: true });
@@ -16,7 +16,8 @@ const filePath = (app) => {
 
   app.use(
     fileUpload({
-      useTempFiles: false,
+      useTempFiles: true, 
+      tempFileDir: permpath,
       limits: { fileSize: 2 * 1024 * 1024 }, 
       abortOnLimit: true,
     })
