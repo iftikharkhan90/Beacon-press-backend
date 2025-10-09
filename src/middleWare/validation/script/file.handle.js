@@ -6,7 +6,7 @@ const fileUpload = require("express-fileupload");
 const filePath = (app) => {
   // const permpath = path.join(__dirname, "../../../tmp/uploads");
   //  this set up for vercel temporary path
-  const permpath = path.join("/tmp", "uploads");
+  const permpath = path.join("/tmp");
 
   if (!fs.existsSync(permpath)) {
     fs.mkdirSync(permpath, { recursive: true });
