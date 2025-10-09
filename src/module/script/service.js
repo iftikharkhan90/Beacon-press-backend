@@ -13,7 +13,7 @@ const saveFile = async (file) => {
 
 
 
-  const permpath = "ali"// is ko delete kerna hy
+  const permpath = "alii"// is ko delete kerna hy
   const ext = path.extname(file.name).toLowerCase();
   const base = path.basename(file.name, ext); 
   const newName = `${base}-${Date.now()}${ext}`;
