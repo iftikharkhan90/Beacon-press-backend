@@ -16,13 +16,11 @@ const verifyTokenAndAttachUser = async (req, res, next) => {
 
     const user = await User.findById(req.user.id);
     if (!user) {
-      return res.status(400).json("Failed", "User not found");
+      return res.status(400).json( "User not found");
     }
 
     req.userId = user?.id;
     req.user = user;
-  
-
     next();
   } catch (error) {
      return res.status(400).json({

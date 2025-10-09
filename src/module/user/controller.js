@@ -29,9 +29,7 @@ const userCreate = async (req, res) => {
       role,
       isReviewer,
       isverfied,
-    } = req.body;
-
-    // check if user exists
+    } = req.validatedData;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({
@@ -39,19 +37,7 @@ const userCreate = async (req, res) => {
         message: "User already exists!",
       });
     }
-
-    // password validation
-    if (!password || password.length < 8) {
-      return res.status(400).json({
-        success: false,
-        message: "Password must be at least 8 characters",
-      });
-    }
-
-    // hash password
     const cryptedPassword = await hashPassword(password);
-
-    // create user
     const user = await User.create({
       title,
       country,
@@ -106,13 +92,17 @@ const getUserById = async (req, res) => {
 // =============================
 const updateUser = async (req, res) => {
   try {
-    const { password, ...rest } = req.body;
+    const { password, ...rest } = req.validatedData;
 
     if (password) {
       rest.password = await hashPassword(password);
     }
+    const user_id = req.user
+        console.log("Usdma data");
+    
+    console.log(user_id._id)
 
-    const user = await User.findByIdAndUpdate(req.params.id, rest, {
+    const user = await User.findByIdAndUpdate(user_id._id, rest, {
       new: true,
     });
 
@@ -137,7 +127,7 @@ const updateUser = async (req, res) => {
 // =============================
 const userLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.validatedData;
 
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
