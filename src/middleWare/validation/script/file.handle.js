@@ -6,9 +6,9 @@ const fileUpload = require("express-fileupload");
 const filePath = (app) => {
   const permpath = path.join(__dirname, "../../../upload");
 
-  if (!fs.existsSync(permpath)) {
-    fs.mkdirSync(permpath, { recursive: true });
-  }
+  // if (!fs.existsSync(permpath)) {
+  //   fs.mkdirSync(permpath, { recursive: true });
+  // }
 
 
   app.use("/files", express.static(permpath));
