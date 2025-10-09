@@ -54,7 +54,7 @@ const userCreate = async (req, res) => {
     });
 
     // send verification email
-    
+
     // const OTP = genEmailVerfyToken(user);
     // await sendEmail(user.email, "Verify your email", otpTemplate(OTP));
 
@@ -76,14 +76,20 @@ const userCreate = async (req, res) => {
 // =============================
 const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user_id = req.user;
+    console.log(user_id);
+
+    const user = await User.findById(user_id._id);
+    if (!user) {
+      return res.status(400).json({ success: false, messag: "user not found" });
+    }
     return res.status(200).json({
       success: true,
       message: "User fetched successfully",
       data: user,
     });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
   }
 };
 
@@ -97,11 +103,7 @@ const updateUser = async (req, res) => {
     if (password) {
       rest.password = await hashPassword(password);
     }
-    const user_id = req.user
-        console.log("Usdma data");
-    
-    console.log(user_id._id)
-
+    const user_id = req.user;
     const user = await User.findByIdAndUpdate(user_id._id, rest, {
       new: true,
     });
@@ -138,15 +140,12 @@ const userLogin = async (req, res) => {
 
     const isMatch = await comaprePassword(password, user.password);
     if (!isMatch) {
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "Invalid password",
-          password: user.password,
-        });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid password",
+        password: user.password,
+      });
     }
-
 
     const token = generateToken(user);
 
