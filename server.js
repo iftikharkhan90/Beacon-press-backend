@@ -17,11 +17,15 @@ app.use(
     credentials: true, 
   })
 );
-filePath(app);
+// ===========================
+//This is imporatent but now this is just commpnet out for just deployemet
+// filePath(app);
+// ===========================
 
 mongoose
   .connect(mongoURL)
   .then(() => console.log("DB is Connected"))
   .catch((err) => console.log("Mongoose err" + err));
 app.use("/api", mainRoutes);
+// app.listen(port,()=>console.log("runnign"));
 module.exports = app;
