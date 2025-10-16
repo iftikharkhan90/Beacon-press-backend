@@ -30,6 +30,4 @@ const verifyTokenAndAttachUser = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  verifyTokenAndAttachUser,
-};
+module.exports = {verifyTokenAndAttachUser};

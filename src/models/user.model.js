@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
+    roleId: { type: mongoose.Schema.ObjectId, ref: "role" },
     title: { type: String },
     country: { type: String },
     firstName: { type: String },
@@ -19,10 +20,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       select: false,
     },
-    role: {
+    usertype: {
       type: String,
-      enum: ["user", "admin", "superAdmin"],
-      default: "user",
+      enum: ["user", "admin"],
     },
     isReviewer: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
@@ -30,5 +30,5 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("user", userSchema);
 module.exports = User;
