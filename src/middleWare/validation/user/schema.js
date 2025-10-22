@@ -1,6 +1,7 @@
 const Joi = require("joi");
 
 const userValidationSchema = Joi.object({
+  roleId: Joi.string().trim().required(),
   title: Joi.string().trim().required(),
   country: Joi.string().trim().required(),
   firstName: Joi.string().trim().required(),
@@ -10,7 +11,7 @@ const userValidationSchema = Joi.object({
   email: Joi.string().trim().email().required(),
   phone: Joi.string().trim().required(),
   password: Joi.string().trim().min(8).required(),
-  role: Joi.string().valid("user", "admin", "superAdmin").optional(),
+  usertype: Joi.string().valid("user", "admin").trim().required(),
   isReviewer: Joi.boolean().default(false),
 });
 
@@ -20,6 +21,7 @@ const userloginValidationSchema = Joi.object({
 })
 
 const userUpdateValidationSchema = Joi.object({
+  roleId: Joi.string().trim().optional(),
   title: Joi.string().trim().optional(),
   country: Joi.string().trim().optional(),
   firstName: Joi.string().trim().optional(),
@@ -28,6 +30,7 @@ const userUpdateValidationSchema = Joi.object({
   affiliation: Joi.string().trim().optional(),
   email: Joi.string().trim().email().optional(),
   phone: Joi.string().trim().optional(),
+  usertype: Joi.string().valid("user", "admin").trim().optional(),
   password: Joi.string().trim().min(8).optional(),
   isReviewer: Joi.boolean().default(false),
 });

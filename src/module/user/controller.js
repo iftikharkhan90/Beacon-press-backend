@@ -17,6 +17,7 @@ const { otpTemplate } = require("../../utils/emailTemplates");
 const userCreate = async (req, res) => {
   try {
     const {
+      roleId,
       title,
       country,
       firstName,
@@ -26,7 +27,7 @@ const userCreate = async (req, res) => {
       email,
       phone,
       password,
-      role,
+      usertype,
       isReviewer,
       isverfied,
     } = req.validatedData;
@@ -39,6 +40,7 @@ const userCreate = async (req, res) => {
     }
     const cryptedPassword = await hashPassword(password);
     const user = await User.create({
+      roleId,
       title,
       country,
       firstName,
@@ -48,7 +50,7 @@ const userCreate = async (req, res) => {
       email,
       phone,
       password: cryptedPassword,
-      role,
+      usertype,
       isReviewer,
       isverfied,
     });
@@ -76,10 +78,11 @@ const userCreate = async (req, res) => {
 // =============================
 const getUserById = async (req, res) => {
   try {
-    const user_id = req.user;
-    console.log(user_id);
+    const {_id} = req.user;
+    console.log(_id);
+    
 
-    const user = await User.findById(user_id._id);
+    const user = await User.findById(_id).populate("roleId");
     if (!user) {
       return res.status(400).json({ success: false, messag: "user not found" });
     }
@@ -99,6 +102,7 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { password, ...rest } = req.validatedData;
+   
 
     if (password) {
       rest.password = await hashPassword(password);
@@ -113,6 +117,7 @@ const updateUser = async (req, res) => {
         .status(404)
         .json({ success: false, message: "User not found" });
     }
+     console.log(user)
 
     return res.status(200).json({
       success: true,

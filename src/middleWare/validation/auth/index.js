@@ -10,6 +10,8 @@ const verifyTokenAndAttachUser = async (req, res, next) => {
   }
 
   let token = req.headers.authorization.split(" ")[1];
+  
+  
 
   try {
     req.user = jwt.verify(token, process.env.JWT_SECRET);
@@ -18,6 +20,7 @@ const verifyTokenAndAttachUser = async (req, res, next) => {
     if (!user) {
       return res.status(400).json( "User not found");
     }
+    console.log(user)
 
     req.userId = user?.id;
     req.user = user;
