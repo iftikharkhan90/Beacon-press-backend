@@ -27,7 +27,6 @@ const userCreate = async (req, res) => {
       email,
       phone,
       password,
-      usertype,
       isReviewer,
       isverfied,
     } = req.validatedData;
@@ -50,7 +49,7 @@ const userCreate = async (req, res) => {
       email,
       phone,
       password: cryptedPassword,
-      usertype,
+      usertype:"user",
       isReviewer,
       isverfied,
     });

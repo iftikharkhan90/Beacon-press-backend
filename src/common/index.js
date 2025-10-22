@@ -8,8 +8,6 @@ const generateToken = (user) => {
     id: user._id,
    name: `${user.firstName} ${user.lastName}`,
     email: user.email,
-    usertype: user.usertype
-
   };
   const secretKey = process.env.JWT_SECRET;
   const options = {

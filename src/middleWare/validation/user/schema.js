@@ -11,7 +11,6 @@ const userValidationSchema = Joi.object({
   email: Joi.string().trim().email().required(),
   phone: Joi.string().trim().required(),
   password: Joi.string().trim().min(8).required(),
-  usertype: Joi.string().valid("user", "admin").trim().required(),
   isReviewer: Joi.boolean().default(false),
 });
 
@@ -30,7 +29,6 @@ const userUpdateValidationSchema = Joi.object({
   affiliation: Joi.string().trim().optional(),
   email: Joi.string().trim().email().optional(),
   phone: Joi.string().trim().optional(),
-  usertype: Joi.string().valid("user", "admin").trim().optional(),
   password: Joi.string().trim().min(8).optional(),
   isReviewer: Joi.boolean().default(false),
 });
