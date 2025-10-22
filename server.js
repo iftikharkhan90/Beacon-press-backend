@@ -29,5 +29,5 @@ mongoose
    seedRole()
 
 app.use("/api", mainRoutes);
-// app.listen(port,()=>console.log("runnign"));
-module.exports = app;
+app.listen(port,()=>console.log("runnign"));
+// module.exports = app;
