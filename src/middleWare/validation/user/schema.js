@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const userValidationSchema = Joi.object({
-  roleId: Joi.string().trim().required(),
+  roleId: Joi.string().trim().optional(),
   title: Joi.string().trim().required(),
   country: Joi.string().trim().required(),
   firstName: Joi.string().trim().required(),
