@@ -24,6 +24,7 @@ const verifyTokenAndAttachUser = async (req, res, next) => {
 
     req.userId = user?.id;
     req.user = user;
+
     next();
   } catch (error) {
      return res.status(400).json({

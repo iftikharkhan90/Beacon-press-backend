@@ -10,7 +10,7 @@ const journalsSchemma = new mongoose.Schema(
       type: String,
     },
     image:{type:String},
-    createdby:{type: String},
+    createdby:{type: mongoose.Schema.ObjectId, ref: "users"},
     users: [
       {
         type: mongoose.Schema.Types.ObjectId,

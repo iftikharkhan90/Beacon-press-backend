@@ -6,12 +6,15 @@ const {saveFile} =  require("../script/service")
 const createJournals = async (req, res) => {
   try {
     const data = req.validatedData;
+    data.createdby=req.user 
+    console.log(data);
+    
     const {image} = req.files || {}
 
     const {url} =   await saveFile(image);
     data.image=url
 
-    console.log(data)
+
 
     const newJournals = await Journal.create(data);
     return res.status(200).json({
@@ -26,12 +29,13 @@ const createJournals = async (req, res) => {
 
 const getJournals = async (req, res) => {
   try {
-    const journal = await Journal.find().populate("users");
-    if (!journal) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No journal(s) found" });
-    }
+    const journal = await Journal.find().populate("users").populate("createdby");;
+    
+if (!journal || journal.length === 0) {
+  return res
+    .status(404)
+    .json({ success: false, message: "No journal(s) found" });
+}
 
     return res.status(200).json({
       success: true,
