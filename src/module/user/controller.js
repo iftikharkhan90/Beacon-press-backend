@@ -153,7 +153,7 @@ const userLogin = async (req, res) => {
 
       if(user.usertype !=="user"){
       return res.status(403).json({
-        message: "User not found",
+        message: "Access denied: Only users can log in",
       });
     }
 

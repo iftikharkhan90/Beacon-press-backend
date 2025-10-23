@@ -17,7 +17,7 @@ const adminLogin = async (req, res) => {
     }
     if(user.usertype !=="admin"){
       return res.status(403).json({
-        message: "Admin not found",
+        message: "Access denied: Only Admin can log in",
       });
     }
 
