@@ -33,6 +33,7 @@ const manuscriptDetailsSchema = new mongoose.Schema({
 
 const manuscriptSchema = new mongoose.Schema(
   {
+    journalsId:{ type: mongoose.Schema.Types.ObjectId, ref: "Journals", required: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "users", required: true },
 
     manuscriptDetails: { type: manuscriptDetailsSchema, required: true },

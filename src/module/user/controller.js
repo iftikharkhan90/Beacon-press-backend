@@ -78,7 +78,7 @@ const userCreate = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const {_id} = req.user;
-    console.log(_id);
+
     
 
     const user = await User.findById(_id).populate("roleId");
@@ -116,7 +116,7 @@ const updateUser = async (req, res) => {
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-     console.log(user)
+
 
     return res.status(200).json({
       success: true,
@@ -195,7 +195,6 @@ const forgotPassword = async (req, res) => {
       return res.status(400).json(response);
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Error in forgotPassword: " + error.message,
@@ -227,7 +226,6 @@ const resetPassword = async (req, res) => {
       });
     }
     const userId = result.data.id;
-    console.log("userId", userId);
     const hashedPassword = await hashPassword(password);
 
     const user = await User.findByIdAndUpdate(
@@ -247,7 +245,6 @@ const resetPassword = async (req, res) => {
       message: "Password reset successfully",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Error in resetPassword: " + error.message,
@@ -297,7 +294,6 @@ const userVerify = async (req, res) => {
       user,
     });
   } catch (err) {
-    console.log(err);
     return res.status(500).json({
       success: false,
       message: "Error in userVerify: " + err.message,

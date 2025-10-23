@@ -4,6 +4,7 @@ const { saveFile } = require("./service")
 const createScript = async (req, res) => {
   try {
     let {
+      journalsId,
       manuscriptDetails,
       authors,
       reviewers,
@@ -34,6 +35,7 @@ const createScript = async (req, res) => {
     };
 
     const newScript = await Manuscript.create({
+      journalsId,
       userId: req.userId,
       manuscriptDetails,
       authors,
@@ -65,7 +67,7 @@ const getScript = async (req, res) => {
     const user = req.user; 
 
     const script = await Manuscript.find({ userId: user._id })  
-      .populate("userId");  
+      .populate("userId").populate("journalsId");  
 
     if (!script) {
       return res.status(400).json({ success: false, message: "No script exists for this user" });

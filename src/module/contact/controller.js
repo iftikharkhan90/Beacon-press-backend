@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 exports.createContact = async (req, res) => {
   try {
     const { fullName, emailAddress, message } = req.body;
-    console.log("req.body", req.body)
+ 
 
     // Save to DB
     const contact = await Contact.create({ fullName, emailAddress, message });

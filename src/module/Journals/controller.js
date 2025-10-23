@@ -6,9 +6,7 @@ const {saveFile} =  require("../script/service")
 const createJournals = async (req, res) => {
   try {
     const data = req.validatedData;
-    data.createdby=req.user 
-    console.log(data);
-    
+    data.createdby=req.user     
     const {image} = req.files || {}
 
     const {url} =   await saveFile(image);

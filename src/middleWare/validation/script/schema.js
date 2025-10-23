@@ -26,6 +26,7 @@ const reviewerSchema = Joi.object({
 });
 
 const scriptValidationSchema = Joi.object({
+  journalsId: Joi.string().length(24).hex().required(),
   manuscriptDetails: manuscriptDetailsSchema.required(),
   authors: Joi.array().items(authorSchema).min(1).required(),
   reviewers: Joi.array().items(reviewerSchema).min(3).required(),
