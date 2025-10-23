@@ -28,7 +28,7 @@ const manuscriptDetailsSchema = new mongoose.Schema({
   abstract: { type: String, required: true },
   correspondingName: { type: String, required: true },
   correspondingEmail: { type: String, required: true },
-  code: { type: String, required: false },
+  keyword: { type: String, required: false },
 });
 
 const manuscriptSchema = new mongoose.Schema(
