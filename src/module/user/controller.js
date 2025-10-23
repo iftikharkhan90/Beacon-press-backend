@@ -151,6 +151,12 @@ const userLogin = async (req, res) => {
       });
     }
 
+      if(user.usertype !=="user"){
+      return res.status(403).json({
+        message: "User not found",
+      });
+    }
+
     const token = generateToken(user);
 
     return res.status(200).json({
