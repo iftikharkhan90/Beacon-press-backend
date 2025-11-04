@@ -13,7 +13,7 @@ const patchjournalsvalidationSchemma = joi.object({
 })
 
 const journalImagevalidationSchemma = joi.object({
-    image: joi.object().required(),
+    image: joi.object().optional(),
   });
 
 const journalPatchImagevalidationSchemma = joi.object({

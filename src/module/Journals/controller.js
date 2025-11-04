@@ -9,8 +9,11 @@ const createJournals = async (req, res) => {
     data.createdby=req.user     
     const {image} = req.files || {}
 
-    const {url} =   await saveFile(image);
-    data.image=url
+    if (image) {
+  const { url } = await saveFile(image);
+  if (url) data.image = url;
+}
+
 
 
 
@@ -51,10 +54,10 @@ const patchJournals = async (req, res) => {
     const data = req.validatedData;
 
     const {image} = req.files || {}
-    if(image){
-    const {url} =   await saveFile(image);
-    data.image=url
-    }
+       if (image) {
+  const { url } = await saveFile(image);
+  if (url) data.image = url;
+}
 
 
 
