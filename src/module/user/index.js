@@ -7,7 +7,7 @@ const { userCreate, userLogin, userVerify, getUserById, updateUser, resetPasswor
 const router = express.Router();
 router.post("/", [validateUserRequest],userCreate);
 router.get("/getuser", [verifyTokenAndAttachUser],getUser);
-router.get("/get", [verifyTokenAndAttachUser],getUserById);
+router.get("/getById", [verifyTokenAndAttachUser],getUserById);
 router.patch("/patch",[verifyTokenAndAttachUser,UpdaUsertevalidateRequest],updateUser);
 router.post("/login",[loginvalidateUserRequest], userLogin);
 router.post("/verify", userVerify);
