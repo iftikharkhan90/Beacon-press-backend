@@ -23,6 +23,12 @@ const createJournalUserRole = async (req, res) => {
     if (!retrieveJournal) {
       return res.status(404).json({ message: "Current Journal ID is not correct" });
     }
+    const existing = await JournalsUserRole.findOne({ roleId, userId, journalsId});
+if (existing) {
+  await JournalsUserRole.findByIdAndDelete(existing._id);
+  return res.status(200).json({ message: "Role removed" });
+}
+    
 
     const JUR = await JournalsUserRole.create({ roleId, userId, journalsId, isAssigned });
 
