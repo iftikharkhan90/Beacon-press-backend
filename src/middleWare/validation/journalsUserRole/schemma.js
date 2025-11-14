@@ -28,17 +28,17 @@ const createJournalUserRoleValidationSchema = Joi.object({
       "string.max": "userId must be exactly 24 characters long",
     }),
 
-  journalsId: Joi.string()
+  journalId: Joi.string()
     .trim()
     .required()
     .min(24)
     .max(24)
     .messages({
-      "string.base": "journalsId must be a string",
-      "string.empty": "journalsId is required",
-      "any.required": "Please provide a journalsId",
-      "string.min": "journalsId must be exactly 24 characters long",
-      "string.max": "journalsId must be exactly 24 characters long",
+      "string.base": "journalId must be a string",
+      "string.empty": "journalId is required",
+      "any.required": "Please provide a journalId",
+      "string.min": "journalId must be exactly 24 characters long",
+      "string.max": "journalId must be exactly 24 characters long",
     }),
 
   isAssigned: Joi.boolean().optional().messages({
@@ -50,10 +50,11 @@ const createJournalUserRoleValidationSchema = Joi.object({
 const updateJournalUserRoleValidationSchemma = Joi.object({
   roleId: Joi.string().trim().optional(),
   userId: Joi.string().trim().optional(),
-  journalsId: Joi.string().trim().optional(),
+  journalId: Joi.string().trim().optional(),
 });
 
-const getJournalUserRoleValidationSchema = Joi.object({
+const 
+getJournalUserRoleValidationSchema = Joi.object({
   userId: Joi.string()
     .trim()
     .optional()
@@ -66,16 +67,16 @@ const getJournalUserRoleValidationSchema = Joi.object({
       "string.max": "userId must be exactly 24 characters long",
     }),
 
-  journalsId: Joi.string()
+  journalId: Joi.string()
     .trim()
     .optional()
     .min(24)
     .max(24)
     .messages({
-      "string.base": "journalsId must be a string",
-      "string.empty": "journalsId cannot be empty",
-      "string.min": "journalsId must be exactly 24 characters long",
-      "string.max": "journalsId must be exactly 24 characters long",
+      "string.base": "journalId must be a string",
+      "string.empty": "journalId cannot be empty",
+      "string.min": "journalId must be exactly 24 characters long",
+      "string.max": "journalId must be exactly 24 characters long",
     }),
 });
 

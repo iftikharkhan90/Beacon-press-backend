@@ -7,7 +7,7 @@ const { message } = require("../../middleWare/validation/script/schema");
 
 const createJournalUserRole = async (req, res) => {
   try {
-    const { roleId, userId, journalsId, isAssigned } = req.validatedData;
+    const { roleId, userId, journalId, isAssigned } = req.validatedData;
 
     const retrieveRole = await Role.findById(roleId);
     if (!retrieveRole) {
@@ -23,7 +23,7 @@ const createJournalUserRole = async (req, res) => {
         .json({ message: "Current User ID is not correct" });
     }
 
-    const retrieveJournal = await Journals.findById(journalsId);
+    const retrieveJournal = await Journals.findById(journalId);
     if (!retrieveJournal) {
       return res
         .status(404)
@@ -32,7 +32,7 @@ const createJournalUserRole = async (req, res) => {
     const existing = await JournalUser.findOne({
       roleId,
       userId,
-      journalsId,
+      journalId,
     });
     if (existing) {
       await JournalUser.findByIdAndDelete(existing._id);
@@ -42,7 +42,7 @@ const createJournalUserRole = async (req, res) => {
     const JUR = await JournalUser.create({
       roleId,
       userId,
-      journalsId,
+      journalId,
       isAssigned,
     });
 

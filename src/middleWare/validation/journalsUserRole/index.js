@@ -56,6 +56,8 @@ const createJournalUserRoleValidationRequest = (req, res, next) => {
 
 const getJournalUserRoleValidationRequest = (req, res, next) => {
   let data = req.query;  
+  console.log(data);
+  
   if (!data ) {
     return res.status(400).json("No data in request");
   }
@@ -77,8 +79,6 @@ const getJournalUserRoleValidationRequest = (req, res, next) => {
       errors: error.details[0].message,
     });
   }
-
-  console.log(value);
   
   req.validatedData = value;
 
