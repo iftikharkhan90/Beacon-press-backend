@@ -1,4 +1,4 @@
-const JournalsUserRole = require("../../models/journals.user.role.model");
+const JournalUser = require("../../models/journals.user.role.model");
 const JUR = require("../../models/journals.user.role.model");
 const Role = require("../../models/role.model");
 const Journals = require("../../models/Journals.model");
@@ -29,17 +29,17 @@ const createJournalUserRole = async (req, res) => {
         .status(404)
         .json({ message: "Current Journal ID is not correct" });
     }
-    const existing = await JournalsUserRole.findOne({
+    const existing = await JournalUser.findOne({
       roleId,
       userId,
       journalsId,
     });
     if (existing) {
-      await JournalsUserRole.findByIdAndDelete(existing._id);
+      await JournalUser.findByIdAndDelete(existing._id);
       return res.status(200).json({ message: "Role removed" });
     }
 
-    const JUR = await JournalsUserRole.create({
+    const JUR = await JournalUser.create({
       roleId,
       userId,
       journalsId,
