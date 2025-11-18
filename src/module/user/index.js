@@ -5,7 +5,7 @@ const {validateUserRequest,loginvalidateUserRequest,UpdaUsertevalidateRequest} =
 const { userCreate, userLogin, userVerify, getUserById, updateUser, resetPassword, forgotPassword } = require("./controller");
 
 const router = express.Router();
-router.post("/", [validateUserRequest],userCreate);
+router.post("/register", [validateUserRequest],userCreate);
 router.get("/getById", [verifyTokenAndAttachUser],getUserById);
 router.patch("/patch",[verifyTokenAndAttachUser,UpdaUsertevalidateRequest],updateUser);
 router.post("/login",[loginvalidateUserRequest], userLogin);
