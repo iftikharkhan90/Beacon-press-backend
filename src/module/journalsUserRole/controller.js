@@ -68,7 +68,7 @@ const getJournalUserRole = async (req, res) => {
       });
     }
 
-    const retreveJUR = await JUR.find(filter)
+    const retreveJUR = await JournalUser.find(filter)
       .populate("roleId")
       .populate("journalId")
       .populate("userId");
@@ -86,4 +86,70 @@ const getJournalUserRole = async (req, res) => {
   }
 };
 
-module.exports = { getJournalUserRole, createJournalUserRole };
+const updateJournalRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.validatedData;
+
+    if (!id) {
+      return res.status(400).json({ success: false, message: "ID is required in params" });
+    }
+
+    if (!data || Object.keys(data).length === 0) {
+      return res.status(400).json({ success: false, message: "No data to update" });
+    }
+
+    // ✅ Check if userId exists
+    if (data.userId) {
+      const userExists = await User.findById(data.userId);
+      if (!userExists) {
+        return res.status(404).json({ success: false, message: "User not found" });
+      }
+    }
+
+    // ✅ Check if journalId exists
+    if (data.journalId) {
+      const journalExists = await Journals.findById(data.journalId);
+      if (!journalExists) {
+        return res.status(404).json({ success: false, message: "Journal not found" });
+      }
+    }
+
+    // ✅ Check if roleId exists
+    if (data.roleId) {
+      const roleExists = await Role.findById(data.roleId);
+      if (!roleExists) {
+        return res.status(404).json({ success: false, message: "Role not found" });
+      }
+    }
+
+    const updatedDoc = await JournalUser.findByIdAndUpdate(
+      id,
+      data,
+      { new: true }
+    );
+
+    if (!updatedDoc) {
+      return res.status(404).json({ success: false, message: "JournalUser record not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Journal User Role updated successfully",
+      data: updatedDoc,
+    });
+
+  } catch (error) {
+    console.error("Error updating JournalUserRole:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+
+
+
+module.exports = { getJournalUserRole, createJournalUserRole, updateJournalRole };

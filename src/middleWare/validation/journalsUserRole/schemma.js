@@ -47,10 +47,45 @@ const createJournalUserRoleValidationSchema = Joi.object({
 });
 
 
-const updateJournalUserRoleValidationSchemma = Joi.object({
-  roleId: Joi.string().trim().optional(),
-  userId: Joi.string().trim().optional(),
-  journalId: Joi.string().trim().optional(),
+const updateJournalUserRoleValidationSchema = Joi.object({
+  roleId: Joi.string()
+    .trim()
+    .min(24)
+    .max(24)
+    .optional()
+    .messages({
+      "string.base": "roleId must be a string",
+      "string.min": "roleId must be exactly 24 characters long",
+      "string.max": "roleId must be exactly 24 characters long",
+    }),
+    
+  userId: Joi.string()
+    .trim()
+    .min(24)
+    .max(24)
+    .optional()
+    .messages({
+      "string.base": "userId must be a string",
+      "string.min": "userId must be exactly 24 characters long",
+      "string.max": "userId must be exactly 24 characters long",
+    }),
+    
+  journalId: Joi.string()   // <-- fixed here
+    .trim()
+    .min(24)
+    .max(24)
+    .optional()
+    .messages({
+      "string.base": "journalId must be a string",
+      "string.min": "journalId must be exactly 24 characters long",
+      "string.max": "journalId must be exactly 24 characters long",
+    }),
+    
+  isAssigned: Joi.boolean()
+    .optional()
+    .messages({
+      "boolean.base": "isAssigned must be true or false",
+    }),
 });
 
 const 
@@ -85,5 +120,6 @@ getJournalUserRoleValidationSchema = Joi.object({
 
 module.exports = {
 createJournalUserRoleValidationSchema,
- getJournalUserRoleValidationSchema
+ getJournalUserRoleValidationSchema,
+ updateJournalUserRoleValidationSchema 
 };
