@@ -3,10 +3,10 @@ const Role = require("../src/models/role.model");
 const seedRole = async () => {
   try {
     const roles = [
-      { title: "author", key: "AUTHOR" },
-      { title: "reviewer", key: "REVIEWER" },
-      { title: "editor", key: "EDITOR" },
-      { title: "Association author", key: "ASSOCIATION_AUTHOR" },
+      { title: "Author", key: "AUTHOR" },
+      { title: "Reviewer", key: "REVIEWER" },
+      { title: "Editor", key: "EDITOR" },
+      { title: "Association Editor", key: "ASSOCIATION_EDITOR" },
     ];
 
     const role = await Role.find();

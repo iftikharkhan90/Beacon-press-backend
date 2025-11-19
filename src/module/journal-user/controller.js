@@ -99,7 +99,6 @@ const updateJournal = async (req, res) => {
       return res.status(400).json({ success: false, message: "No data to update" });
     }
 
-    // ✅ Check if userId exists
     if (data.userId) {
       const userExists = await User.findById(data.userId);
       if (!userExists) {
@@ -107,7 +106,6 @@ const updateJournal = async (req, res) => {
       }
     }
 
-    // ✅ Check if journalId exists
     if (data.journalId) {
       const journalExists = await Journals.findById(data.journalId);
       if (!journalExists) {
@@ -115,7 +113,6 @@ const updateJournal = async (req, res) => {
       }
     }
 
-    // ✅ Check if roleId exists
     if (data.roleId) {
       const roleExists = await Role.findById(data.roleId);
       if (!roleExists) {
@@ -130,12 +127,12 @@ const updateJournal = async (req, res) => {
     );
 
     if (!updatedDoc) {
-      return res.status(404).json({ success: false, message: "JournalUser record not found" });
+      return res.status(404).json({ success: false, message: "Journal-User record not found" });
     }
 
     return res.status(200).json({
       success: true,
-      message: "Journal User Role updated successfully",
+      message: "Journal-User updated successfully",
       data: updatedDoc,
     });
 

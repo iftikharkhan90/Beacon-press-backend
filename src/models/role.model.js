@@ -4,7 +4,7 @@ const roleSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      enum: ["author", "reviewer", "editor", "Association author"],
+      enum: ["Author", "Reviewer", "Editor", "Association Editor"],
     },
     key: {
       type: String,
