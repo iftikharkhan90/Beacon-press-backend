@@ -25,7 +25,7 @@ const reviewerSchema = Joi.object({
   affiliation: Joi.string().trim().required(),
 });
 
-const scriptValidationSchema = Joi.object({
+const createSchema = Joi.object({
   journalsId: Joi.string().length(24).hex().required(),
   manuscriptDetails: manuscriptDetailsSchema.required(),
   authors: Joi.array().items(authorSchema).min(1).required(),
@@ -35,4 +35,4 @@ const scriptValidationSchema = Joi.object({
   dataAvailability: Joi.string().trim().required(),
 });
 
-module.exports = scriptValidationSchema;
+module.exports = createSchema;

@@ -1,7 +1,8 @@
 const Joi = require("joi");
+const { create } = require("../../../models/user.model");
 
 
-const createJournalUserRoleValidationSchema = Joi.object({
+const createSchema = Joi.object({
   roleId: Joi.string()
     .trim()
     .required()
@@ -47,7 +48,7 @@ const createJournalUserRoleValidationSchema = Joi.object({
 });
 
 
-const updateJournalUserRoleValidationSchema = Joi.object({
+const updateSchema = Joi.object({
   roleId: Joi.string()
     .trim()
     .min(24)
@@ -88,8 +89,7 @@ const updateJournalUserRoleValidationSchema = Joi.object({
     }),
 });
 
-const 
-getJournalUserRoleValidationSchema = Joi.object({
+const getSchema = Joi.object({
   userId: Joi.string()
     .trim()
     .optional()
@@ -119,7 +119,7 @@ getJournalUserRoleValidationSchema = Joi.object({
 
 
 module.exports = {
-createJournalUserRoleValidationSchema,
- getJournalUserRoleValidationSchema,
- updateJournalUserRoleValidationSchema 
+createSchema,
+getSchema,
+updateSchema 
 };

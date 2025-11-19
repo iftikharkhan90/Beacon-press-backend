@@ -1,10 +1,10 @@
 const Joi = require("joi");
-const scriptValidationSchema = require("./schema");
+const createSchema = require("./schema");
 
-const validateScriptRequest = (req, res, next) => {
+const validateCreateScriptRequest = (req, res, next) => {
   let data = req.body;
 
-  const { error, value } = scriptValidationSchema.validate(data, {
+  const { error, value } = createSchema.validate(data, {
     abortEarly: false,
     stripUnknown: true,
   });
@@ -66,4 +66,4 @@ const validateFiles = (req, res, next) => {
   next();
 };
 
-module.exports = { validateScriptRequest, preprocessBody, validateFiles };
+module.exports = { validateCreateScriptRequest, preprocessBody, validateFiles };

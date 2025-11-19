@@ -1,17 +1,17 @@
 const {
-  createJournalUserRoleValidationSchema,
-  getJournalUserRoleValidationSchema,
-  updateJournalUserRoleValidationSchema
+ createSchema,
+getSchema,
+updateSchema 
 } = require("./schemma"); // make sure the filename is correct
 
-// ✅ Create Validation
-const createJournalUserRoleValidationRequest = (req, res, next) => {
+//  Create Validation
+const validateCreateJournalUserRequest = (req, res, next) => {
   const data = req.body;
   if (!data) {
     return res.status(400).json({ success: false, message: "No data in request body" });
   }
 
-  const { error, value } = createJournalUserRoleValidationSchema.validate(data, {
+  const { error, value } = createSchema.validate(data, {
     abortEarly: false,
     stripUnknown: true
   });
@@ -24,14 +24,14 @@ const createJournalUserRoleValidationRequest = (req, res, next) => {
   next();
 };
 
-// ✅ Patch / Update Validation
-const patchJournalUserRoleValidationRequest = (req, res, next) => {
+//  Patch / Update Validation
+const validateUpdateJournalUserRequest = (req, res, next) => {
   const data = req.body;
   if (!data || Object.keys(data).length === 0) {
     return res.status(400).json({ success: false, message: "No data to update" });
   }
 
-  const { error, value } = updateJournalUserRoleValidationSchema.validate(data, {
+  const { error, value } = updateSchema.validate(data, {
     abortEarly: false,
     stripUnknown: true
   });
@@ -44,14 +44,14 @@ const patchJournalUserRoleValidationRequest = (req, res, next) => {
   next();
 };
 
-// ✅ Get Validation
-const getJournalUserRoleValidationRequest = (req, res, next) => {
+//  Get Validation
+const validateGetJournalUserRequest = (req, res, next) => {
   const data = req.query;
   if (!data || Object.keys(data).length === 0) {
     return res.status(400).json({ success: false, message: "No data in request" });
   }
 
-  const { error, value } = getJournalUserRoleValidationSchema.validate(data, {
+  const { error, value } = getSchema.validate(data, {
     abortEarly: false,
     stripUnknown: true
   });
@@ -64,8 +64,4 @@ const getJournalUserRoleValidationRequest = (req, res, next) => {
   next();
 };
 
-module.exports = {
-  createJournalUserRoleValidationRequest,
-  patchJournalUserRoleValidationRequest, // ✅ export it
-  getJournalUserRoleValidationRequest
-};
+module.exports = {validateCreateJournalUserRequest,validateGetJournalUserRequest,validateUpdateJournalUserRequest};

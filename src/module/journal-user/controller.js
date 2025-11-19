@@ -5,7 +5,7 @@ const Journals = require("../../models/Journals.model");
 const User = require("../../models/user.model");
 const { message } = require("../../middleWare/validation/script/schema");
 
-const createJournalUserRole = async (req, res) => {
+const createJournalUser = async (req, res) => {
   try {
     const { roleId, userId, journalId, isAssigned } = req.validatedData;
 
@@ -52,7 +52,7 @@ const createJournalUserRole = async (req, res) => {
   }
 };
 
-const getJournalUserRole = async (req, res) => {
+const getJournalUser = async (req, res) => {
   try {
     const { userId, journalId } = req.validatedData;
 
@@ -86,7 +86,7 @@ const getJournalUserRole = async (req, res) => {
   }
 };
 
-const updateJournalRole = async (req, res) => {
+const updateJournal = async (req, res) => {
   try {
     const { id } = req.params;
     const data = req.validatedData;
@@ -152,4 +152,4 @@ const updateJournalRole = async (req, res) => {
 
 
 
-module.exports = { getJournalUserRole, createJournalUserRole, updateJournalRole };
+module.exports = { getJournalUser, createJournalUser, updateJournal };

@@ -4,7 +4,7 @@ const {
   verifyTokenAndAttachUser,
 } = require("../../middleWare/validation/auth");
 const {
-  validateScriptRequest,
+  validateCreateScriptRequest,
   preprocessBody,
   validateFiles,
 } = require("../../middleWare/validation/script");
@@ -16,7 +16,7 @@ router.post(
   [
     verifyTokenAndAttachUser,
     preprocessBody,
-    validateScriptRequest,
+    validateCreateScriptRequest,
     validateFiles,
   ],
   createScript
