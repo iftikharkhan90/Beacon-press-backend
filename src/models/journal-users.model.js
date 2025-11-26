@@ -10,4 +10,4 @@ const jounalsUserRoleSchemma = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("journal_Users", jounalsUserRoleSchemma);
+module.exports = mongoose.model("journal-users", jounalsUserRoleSchemma);

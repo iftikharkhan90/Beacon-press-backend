@@ -1,5 +1,5 @@
-const JournalUser = require("../../models/journals.user.role.model");
-const JUR = require("../../models/journals.user.role.model");
+const JournalUser = require("../../models/journal-users.model");
+
 const Role = require("../../models/role.model");
 const Journals = require("../../models/Journals.model");
 const User = require("../../models/user.model");
