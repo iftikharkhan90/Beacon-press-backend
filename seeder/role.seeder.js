@@ -7,6 +7,8 @@ const seedRole = async () => {
       { title: "Reviewer", key: "REVIEWER" },
       { title: "Editor", key: "EDITOR" },
       { title: "Association Editor", key: "ASSOCIATION_EDITOR" },
+      { title: "Editor in Chief", key: "EDITOR IN CHIEF" },
+      { title: "Editorial Board Member", key: "EDITORIAL BOARD MEMBER" },
     ];
 
     const role = await Role.find();
