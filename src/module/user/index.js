@@ -1,15 +1,15 @@
 const express = require("express");
 const { model } = require("mongoose");
 const  {verifyTokenAndAttachUser} = require("../../middleWare/validation/auth/index")
-const {validateUserRequest,loginvalidateUserRequest,UpdaUsertevalidateRequest} = require("../../middleWare/validation/user/index")
-const { userCreate, userLogin, userVerify, getUserById, updateUser, resetPassword, forgotPassword } = require("./controller");
+const validation = require("../../middleWare/validation/user/index")
+const userController = require("./controller");
 
 const router = express.Router();
-router.post("/register", [validateUserRequest],userCreate);
-router.get("/getById", [verifyTokenAndAttachUser],getUserById);
-router.patch("/patch",[verifyTokenAndAttachUser,UpdaUsertevalidateRequest],updateUser);
-router.post("/login",[loginvalidateUserRequest], userLogin);
-router.post("/verify", userVerify);
-router.post("/forgot-password", forgotPassword);
-router.post("/reset-password", resetPassword);
+router.post("/register", [validation.validateUserRequest],userController.userCreate);
+router.get("/getById", [verifyTokenAndAttachUser],userController.getUserById);
+router.patch("/patch",[verifyTokenAndAttachUser,validation.validateUserUpdateRequest],userController.updateUser);
+router.post("/login",[validation.validateLoginRequest],userController.userLogin);
+router.post("/verify",userController.userVerify);
+router.post("/forgot-password", userController.forgotPassword);
+router.post("/reset-password", userController.resetPassword);
 module.exports = router;

@@ -1,13 +1,14 @@
-const { models } = require("mongoose");
-const {userValidationSchema , userloginValidationSchema , userUpdateValidationSchema} = require("./schema")
+const userSchemma = require("./schema")
 
-const validateUserRequest = (req, res, next) => {
-  let data = req.body;
-  if(!data){
-    return res.status(400).json("No data in request body")
+const validateRequest = (schema) => (req, res, next) => {
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: "Request body is empty",
+    });
   }
 
-  const { error, value } = userValidationSchema.validate(data, {
+  const { error, value } = schema.validate(req.body, {
     abortEarly: false,
     stripUnknown: true,
   });
@@ -15,56 +16,17 @@ const validateUserRequest = (req, res, next) => {
   if (error) {
     return res.status(400).json({
       success: false,
-      errors: error.details[0].message,
+      message: error.details.map(err => err.message).join(", "),
     });
   }
-  req.validatedData = value;
 
+  req.validatedData = value;
   next();
 };
+;
 
-const loginvalidateUserRequest = (req, res, next) => {
-  let data = req.body;
-  if(!data){
-    return res.status(400).json("No data in request body")
-  }
-
-  const { error, value } = userloginValidationSchema.validate(data, {
-    abortEarly: false,
-    stripUnknown: true,
-  });
-
-  if (error) {
-    return res.status(400).json({
-      success: false,
-      errors: error.details[0].message,
-    });
-  }
-  req.validatedData = value;
-
-  next();
+module.exports = {
+  validateUserRequest: validateRequest(userSchemma.createValidationSchema),
+  validateLoginRequest: validateRequest(userSchemma.loginValidationSchema),
+  validateUserUpdateRequest: validateRequest(userSchemma.UpdateValidationSchema),
 };
-
-const UpdaUsertevalidateRequest = (req, res, next) => {
-  let data = req.body;
-  if(!data){
-    return res.status(400).json("No data in request body")
-  }
-
-  const { error, value } = userUpdateValidationSchema.validate(data, {
-    abortEarly: false,
-    stripUnknown: true,
-  });
-
-  if (error) {
-    return res.status(400).json({
-      success: false,
-      errors: error.details[0].message,
-    });
-  }
-  req.validatedData = value;
-
-  next();
-};
-
-module.exports = {validateUserRequest , loginvalidateUserRequest , UpdaUsertevalidateRequest}

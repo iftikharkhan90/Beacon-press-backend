@@ -1,7 +1,8 @@
 const Joi = require("joi");
 
 //uservalidaionSchemma
-const userValidationSchema = Joi.object({
+module.exports = {
+ createValidationSchema : Joi.object({
   roleId: Joi.string().trim().optional(),
   title: Joi.string().trim().required(),
   country: Joi.string().trim().required(),
@@ -13,14 +14,14 @@ const userValidationSchema = Joi.object({
   phone: Joi.string().trim().required(),
   password: Joi.string().trim().min(8).required(),
   isReviewer: Joi.boolean().default(false),
-});
+}),
 
-const userloginValidationSchema = Joi.object({
+ loginValidationSchema : Joi.object({
      email: Joi.string().trim().email().required(),
      password: Joi.string().trim().required(),
-})
+}),
 
-const userUpdateValidationSchema = Joi.object({
+  UpdateValidationSchema : Joi.object({
   roleId: Joi.string().trim().optional(),
   title: Joi.string().trim().optional(),
   country: Joi.string().trim().optional(),
@@ -28,10 +29,9 @@ const userUpdateValidationSchema = Joi.object({
   lastName: Joi.string().trim().optional(),
   specialization: Joi.string().trim().optional(),
   affiliation: Joi.string().trim().optional(),
-  email: Joi.string().trim().email().optional(),
   phone: Joi.string().trim().optional(),
   password: Joi.string().trim().min(8).optional(),
   isReviewer: Joi.boolean().default(false),
-});
+})
+}
 
-module.exports = {userValidationSchema , userloginValidationSchema , userUpdateValidationSchema};

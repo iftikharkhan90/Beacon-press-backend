@@ -1,110 +1,130 @@
-const { message } = require("../../middleWare/validation/script/schema");
 const Journal = require("../../models/Journals.model");
-const User = require("../../models/user.model");
-const {saveFile} =  require("../script/service")
+const services = require("./service");
 
-const createJournals = async (req, res) => {
-  try {
-    const data = req.validatedData;
-    data.createdby=req.user     
-    const {image} = req.files || {}
+module.exports = {
+  createJournal: async (req, res) => {
+    try {
+      const journalData = req.validatedData || {};
+      journalData.createdby = req.userId;
 
-    if (image) {
-  const { url } = await saveFile(image);
-  if (url) data.image = url;
-}
+      const image = req.filePath?.image || "";
+      if (image) journalData.image = image;
 
+      const missingUsers = await services.validateUserIds(journalData.users);
+      if (missingUsers.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Some users do not exist in the database.",
+          missingUserIds: missingUsers,
+        });
+      }
 
-
-
-    const newJournals = await Journal.create(data);
-    return res.status(200).json({
-      success: true,
-      message: "journal created",
-      journals: newJournals,
-    });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-const getJournals = async (req, res) => {
-  try {
-    const journal = await Journal.find().populate("users").populate("createdby");;
-    
-if (!journal || journal.length === 0) {
-  return res
-    .status(404)
-    .json({ success: false, message: "No journal(s) found" });
-}
-
-    return res.status(200).json({
-      success: true,
-      message: "Journal found",
-      journal: journal,
-    });
-  } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-const patchJournals = async (req, res) => {
-  try {
-    const { journalId } = req.params;
-    const data = req.validatedData;
-
-    const {image} = req.files || {}
-       if (image) {
-  const { url } = await saveFile(image);
-  if (url) data.image = url;
-}
-
-
-
-    const journal = await Journal.findByIdAndUpdate(journalId, data,
-    {
-      new: true,
-    });
-    if (!journal) {
-      return res.status(400).json({
+      const newJournal = await Journal.create(journalData);
+      return res.status(200).json({
+        success: true,
+        message: "journal created",
+        journals: newJournal,
+      });
+    } catch (error) {
+      res.status(500).json({
         success: false,
-        message: "id not match",
+        message: "Something went wron while creating journal. plese try later",
+        error: error.message,
       });
     }
-    return res.status(200).json({
-      success: true,
-      message: "Update successfully",
-      journal: journal,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
-};
+  },
 
-const deleteJournals = async (req, res) => {
-  try {
-    const { journalId } = req.params;
-    const journal = await Journal.findByIdAndDelete(journalId);
-    if (!journal) {
-      return res.status(400).json({
+  getJournals: async (req, res) => {
+    try {
+      const journals = await Journal.find()
+        .populate("users")
+        .populate("createdby");
+
+      if (!journals || journals.length === 0) {
+        return res
+          .status(404)
+          .json({ success: false, message: "No journal(s) found" });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: `${journals.length} journal(s) retrieved successfully.`,
+        journal: journals,
+      });
+    } catch (error) {
+      return res.status(500).json({
         success: false,
-        message: "id not match",
+        message:
+          "An error occurred while fetching journals. Please try again later.",
+        error: error.message,
       });
     }
-    return res.status(200).json({
-      success: true,
-      message: "Delete successfully",
-      journal: journal,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
-};
+  },
 
-module.exports = { createJournals, getJournals , patchJournals, deleteJournals};
+  updateJournal: async (req, res) => {
+    try {
+      const { journalId } = req.params;
+      const journalData = req.validatedData || {};
+
+      const image = req.filePath?.image || "";
+      if (image) journalData.image = image;
+
+      const missingUsers = await services.validateUserIds(journalData.users);
+      if (missingUsers.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Some users do not exist in the database.",
+          missingUserIds: missingUsers,
+        });
+      }
+
+      const journal = await Journal.findByIdAndUpdate(journalId, journalData, {
+        new: true,
+      });
+      if (!journal) {
+        return res.status(400).json({
+          success: false,
+          message: "Journal not found. Please check the ID and try again.",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "Journal updated successfully.",
+        journal: journal,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message:
+          "An error occurred while updating the journal. Please try again later.",
+        error: error.message,
+      });
+    }
+  },
+
+  deleteJournalbyId: async (req, res) => {
+    try {
+      const { journalId } = req.params;
+
+      const journal = await Journal.findByIdAndDelete(journalId);
+      if (!journal) {
+        return res.status(404).json({
+          success: false,
+          message: "Journal not found. Please check the ID and try again.",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "Journal deleted successfully.",
+        journal: journal,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message:
+          "An error occurred while deleting the journal. Please try again later.",
+        error: error.message,
+      });
+    }
+  },
+};

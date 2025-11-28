@@ -5,6 +5,7 @@ require("dotenv").config();
 const mainRoutes = require("./src/api-routes/index");
 const filePath = require("./src/middleWare/validation/script/file.handle");
 const seedRole = require("./seeder/role.seeder")
+const path = require("path");
 
 const app = express();
 const port = process.env.PORT;
@@ -20,6 +21,7 @@ app.use(
 );
 
 filePath(app);
+app.use("/files", express.static(path.join(__dirname, "src", "upload")));
 
 mongoose
   .connect(mongoURL)
