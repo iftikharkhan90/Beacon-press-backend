@@ -10,5 +10,11 @@ module.exports = {
     } catch (error) {
       throw error;
     }
+  },
+   getPaperAsignByIdService: async (id) => {
+    return await PaperAsign.findById(id)
+      .populate("manuscriptId")
+      .populate("journalUserId");
+      
   }
 };
