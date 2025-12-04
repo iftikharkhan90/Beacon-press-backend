@@ -12,7 +12,7 @@ const verifyTokenAndAttachUser = async (req, res, next) => {
     let token = req.headers.authorization.split(" ")[1];
 
     if(token==="beaconPressSecretToken"){
-      next()
+     return next()
     }
     req.user = jwt.verify(token, process.env.JWT_SECRET);
 
