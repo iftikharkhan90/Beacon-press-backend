@@ -17,10 +17,10 @@ router.post(
   [verifyTokenAndAttachUser, validation.createRequest],
   controller.createJournal
 );
-router.get("/get", [verifyTokenAndAttachUser], controller.getJournals);
+router.get("/get", [], controller.getJournals);
 router.patch(
   "/patch/:journalId",
-  [verifyTokenAndAttachUser, validation.updateRequest],
+  [, validation.updateRequest],
   controller.updateJournal
 );
 router.delete(

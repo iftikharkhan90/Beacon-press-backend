@@ -6,6 +6,7 @@ const journalsModule = require("../module/Journals/index")
 const roleModule = require("../module/role/index")
 const adminModule = require("../module/admin/index")
 const JURModule = require("../module/journal-user/index")
+const paperAsignModule = require("../module/paper-Asign")
 
 const router = express.Router();
 router.use("/users", userModule);
@@ -15,5 +16,6 @@ router.use("/journals", journalsModule)
 router.use("/role",roleModule)
 router.use("/admin",adminModule)
 router.use("/journal-user",JURModule)
+router.use("/paper-assigns",paperAsignModule)
 
 module.exports = router;
