@@ -9,13 +9,14 @@ const { verifyTokenAndAttachUser } = require("../../middleWare/validation/auth")
 
 router.post(
   "/create",
-  // verifyTokenAndAttachUser,
-  validatePaperAsign,
+ [verifyTokenAndAttachUser ,validatePaperAsign,],
   createPaperAsignController
 );
-router.get("/:id", 
-  verifyTokenAndAttachUser,
+router.get("/get",
+  // [ verifyTokenAndAttachUser] ,
    getPaperAsignByIdController);
+
+
 router.patch("/update/:id", validateUpdatePaperAsign, updatePaperAsignController);
 
 router.delete("/delete/:id", [
