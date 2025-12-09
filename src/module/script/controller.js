@@ -86,4 +86,28 @@ const getScript = async (req, res) => {
 };
 
 
-module.exports = { createScript,getScript };
+const getScriptByjournalId = async (req, res) => {
+  try {
+    const journalId = req.query.journalId;
+
+    const script = await Manuscript.find({ journalsId: journalId })  
+      .populate("userId").populate("journalsId");  
+
+    if (!script) {
+      return res.status(400).json({ success: false, message: "No script exists for this user" });
+    }
+
+    return res.status(200).json(
+      { success: true, manuscript: script }
+    );
+  } catch (err) {
+    console.error("Error:", err);
+    return res.status(400).json(
+      { 
+      success: false, error: err.message 
+    });
+  }
+};
+
+
+module.exports = { createScript,getScript ,getScriptByjournalId};

@@ -1,5 +1,5 @@
 const express = require("express");
-const { createScript ,getScript} = require("./controller");
+const { createScript ,getScript,getScriptByjournalId} = require("./controller");
 const {
   verifyTokenAndAttachUser,
 } = require("../../middleWare/validation/auth");
@@ -28,5 +28,8 @@ router.get("/getScript",
   ],
 getScript
 )
+
+router.get("/get",
+getScriptByjournalId)
 
 module.exports = router;

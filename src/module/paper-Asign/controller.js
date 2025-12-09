@@ -53,7 +53,7 @@ module.exports = {
 
       const result = await getPaperAsignByIdService(journalUserId);
 
-      if (!result || !result.lenght === 0) {
+      if (!result || !result.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Paper Assign not found",
@@ -76,7 +76,7 @@ module.exports = {
   updatePaperAsignController: async (req, res) => {
     try {
       const id = req.params.id;
-      const data = req.validatedDat;
+      const data = req.validatedData;
       const exists = await PaperAsign.findById(id);
       if (!exists) {
         return res.status(404).json({
