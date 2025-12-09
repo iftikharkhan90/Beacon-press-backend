@@ -1,31 +1,33 @@
 const express = require("express");
-const { getJournalUser, createJournalUser, updateJournal } = require("./controller");
+const controller = require("./controller");
 
-const {validateCreateJournalUserRequest,validateGetJournalUserRequest,validateUpdateJournalUserRequest} = require("../../middleWare/validation/journal-user/index");
+const validation = require("../../middleWare/validation/journal-user/index");
 
-const { verifyTokenAndAttachUser } = require("../../middleWare/validation/auth/index");
+const {
+  verifyTokenAndAttachUser,
+} = require("../../middleWare/validation/auth/index");
 
 const router = express.Router();
 
 // Create a Journal User Role
 router.post(
   "/create",
-  [verifyTokenAndAttachUser,validateCreateJournalUserRequest],
-  createJournalUser
+  [verifyTokenAndAttachUser, validation.createJournalUser],
+  controller.createJournalUser
 );
 
 // Get Journal User Role(s)
 router.get(
   "/get",
-  [verifyTokenAndAttachUser, validateGetJournalUserRequest],
-  getJournalUser
+  [verifyTokenAndAttachUser, validation.getJournalUser],
+  controller.getJournalUser
 );
 
 // Update a Journal User Role
 router.patch(
   "/update/:id",
-  [verifyTokenAndAttachUser, validateUpdateJournalUserRequest],
-  updateJournal
+  [verifyTokenAndAttachUser, validation.updateJournalUser],
+  controller.updateJournal
 );
 
 module.exports = router;
