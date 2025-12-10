@@ -9,7 +9,7 @@ const { verifyTokenAndAttachUser } = require("../../middleWare/validation/auth")
 
 router.post(
   "/create",
-  // verifyTokenAndAttachUser,
+   verifyTokenAndAttachUser,
   validatePaperAsign,
   createPaperAsignController
 );
