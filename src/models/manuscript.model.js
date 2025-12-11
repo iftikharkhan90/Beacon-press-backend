@@ -29,6 +29,9 @@ const manuscriptDetailsSchema = new mongoose.Schema({
   correspondingName: { type: String, required: true },
   correspondingEmail: { type: String, required: true },
   keyword: { type: String, required: false },
+  status: { type: String,  },
+
+
 });
 
 const manuscriptSchema = new mongoose.Schema(

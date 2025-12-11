@@ -2,9 +2,9 @@
 
 const { createPaperAsignService,getPaperAsignByIdService } = require("./services");
 const Manuscript = require("../../models/manuscript.model")
-const JournalUser =require("../../models/journal-users.model")
-const PaperAsign = require("../../models/paper-asigns.model");
+const PaperAsign = require("../../models/paper-transition.model");
 const JournalUserRole = require("../../models/role.model")
+const userId = require("../../models/user.model")
 
 
 
@@ -13,20 +13,28 @@ module.exports = {
   createPaperAsignController: async (req, res) => {
     try {
       const data = req.validatedData;
-       const manuscriptExists = await Manuscript.findById(data.manuscriptId);
+      console.log("data",data);
+      
+       const manuscriptExists = await Manuscript.findById(data.paperId);
       if (!manuscriptExists) {
         return res.status(400).json({
           success: false,
-          message: "Invalid manuscriptId: Manuscript not found"
+          message: "Invalid manuscriptId: Manuscript not found",
+                  error:error.message
+
         });
       }
 
       // 🟡 2. Check Journal User Exists
-      const journalUserExists = await JournalUser.findById(data.journalUserId);
+      const journalUserExists = await userId.findById(data.userId);
+    console.log("jornausr",journalUserExists);
+    
       if (!journalUserExists) {
         return res.status(400).json({
           success: false,
-          message: "Invalid journalUserId: Journal user not found"
+          message: "Invalid userId: user not found",
+                  error:error.message
+
         });
       }
 
@@ -43,7 +51,9 @@ module.exports = {
       return res.status(500).json({
         success: false,
         message: "Internal Server Error",
-        error:error.message
+                error:error.message
+
+        
       });
     }
   },
@@ -57,7 +67,7 @@ module.exports = {
         return res.status(404).json({
           success: false,
           message: "Paper Assign not found",
-        error:error.message
+
         });
       }
 
@@ -71,64 +81,66 @@ module.exports = {
       return res.status(500).json({
         success: false,
         message: "Internal Server Error",
-        error:error.message
+                error:error.message
+
         
       });
     }
   },
-  updatePaperAsignController: async (req, res) => {
-    try {
-      const id = req.params.id;
-      const data = req.validatedDat
-      const exists = await PaperAsign.findById(id);
-      if (!exists) {
-        return res.status(404).json({
-          success: false,
-          message: "PaperAssign not found",
-        error:error.message
-        });
-      }
+ updatePaperAsignController: async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = req.validatedData;
 
-      if (data.journalUserRoleId) {
-        const jUser = await JournalUserRole.findById(data.journalUserRoleId);
-        if (!jUser) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid journalUserRoleId",
-        error:error.message
-          });
-        }
-      }
-
-      if (data.manuscriptId) {
-        const manuscript = await Manuscript.findById(data.manuscriptId);
-        if (!manuscript) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid manuscriptId",
-        error:error.message
-          });
-        }
-      }
-
-      const updated = await PaperAsign.findByIdAndUpdate(id, data, {
-        new: true
-      });
-
-      return res.status(200).json({
-        success: true,
-        message: "PaperAssign updated successfully",
-        data: updated
-      });
-    } catch (error) {
-      console.log("PaperAsign Update Error:", error);
-      return res.status(500).json({
+    const exists = await PaperAsign.findById(id);
+    if (!exists) {
+      return res.status(404).json({
         success: false,
-        message: "Internal Server Error",
-        error:error.message
+        message: "PaperAssign not found",
       });
     }
-  },
+
+    // Validate journal user role (if required)
+    if (data.journalUserRoleId) {
+      const jUser = await JournalUserRole.findById(data.journalUserRoleId);
+      if (!jUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid journalUserRoleId",
+        });
+      }
+    }
+
+    // Validate manuscript
+    if (data.paperId) {
+      const manuscript = await Manuscript.findById(data.paperId);
+      if (!manuscript) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid manuscriptId",
+        });
+      }
+    }
+
+    const updated = await PaperAsign.findByIdAndUpdate(id, data, {
+      new: true,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "PaperAssign updated successfully",
+      data: updated,
+    });
+
+  } catch (error) {
+    console.log("PaperAsign Update Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+},
 
   // DELETE
   deletePaperAsignController: async (req, res) => {

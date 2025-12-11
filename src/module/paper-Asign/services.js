@@ -1,6 +1,6 @@
 // services/paperAsign.service.js
 
-const PaperAsign = require("../../models/paper-asigns.model");
+const PaperAsign = require("../../models/paper-transition.model");
 
 module.exports = {
   createPaperAsignService: async (data) => {
@@ -13,8 +13,8 @@ module.exports = {
   },
    getPaperAsignByIdService: async (id) => {
     return await PaperAsign.findById(id)
-      .populate("manuscriptId")
-      .populate("journalUserId");
+      .populate("paperId")
+      .populate("userId");
       
   }
 };
