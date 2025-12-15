@@ -1,13 +1,9 @@
-// modules/paperAsign/controller.js
 
 const { createPaperAsignService,getPaperAsignByIdService } = require("./services");
 const Manuscript = require("../../models/manuscript.model")
 const PaperAsign = require("../../models/paper-transition.model");
 const JournalUserRole = require("../../models/role.model")
 const userId = require("../../models/user.model")
-
-
-
 
 module.exports = {
   createPaperAsignController: async (req, res) => {
@@ -25,7 +21,6 @@ module.exports = {
         });
       }
 
-      // 🟡 2. Check Journal User Exists
       const journalUserExists = await userId.findById(data.userId);
     console.log("jornausr",journalUserExists);
     
@@ -100,7 +95,6 @@ module.exports = {
       });
     }
 
-    // Validate journal user role (if required)
     if (data.journalUserRoleId) {
       const jUser = await JournalUserRole.findById(data.journalUserRoleId);
       if (!jUser) {
@@ -111,7 +105,6 @@ module.exports = {
       }
     }
 
-    // Validate manuscript
     if (data.paperId) {
       const manuscript = await Manuscript.findById(data.paperId);
       if (!manuscript) {
@@ -141,8 +134,6 @@ module.exports = {
     });
   }
 },
-
-  // DELETE
   deletePaperAsignController: async (req, res) => {
     try {
       const id = req.params.id;

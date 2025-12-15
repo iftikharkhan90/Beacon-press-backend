@@ -1,4 +1,3 @@
-// modules/paperAsign/index.js
 
 const express = require("express");
 const router = express.Router();
@@ -9,17 +8,17 @@ const { verifyTokenAndAttachUser } = require("../../middleWare/validation/auth")
 
 router.post(
   "/create",
- //  verifyTokenAndAttachUser,
+   verifyTokenAndAttachUser,
   validatePaperAsign,
   createPaperAsignController
 );
 router.get("/:id", 
-  //verifyTokenAndAttachUser,
+  verifyTokenAndAttachUser,
    getPaperAsignByIdController);
 router.patch("/update/:id", validateUpdatePaperAsign, updatePaperAsignController);
 
 router.delete("/delete/:id", [
-  //verifyTokenAndAttachUser,
+  verifyTokenAndAttachUser,
 ], deletePaperAsignController);
 
 module.exports = router;

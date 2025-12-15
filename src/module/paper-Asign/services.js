@@ -1,4 +1,3 @@
-// services/paperAsign.service.js
 
 const PaperAsign = require("../../models/paper-transition.model");
 
