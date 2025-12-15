@@ -1,6 +1,5 @@
 const Joi = require("joi");
 
-//paperAsignSchema
 const paperAsignschema = Joi.object({
     paperId: Joi.string().trim().required().min(24)
         .max(24),
