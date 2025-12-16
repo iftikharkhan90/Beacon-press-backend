@@ -53,13 +53,6 @@ module.exports = {
 
       const result = await getPaperAsignByIdService(journalUserId);
 
-      if (!result || !result.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Paper Assign not found",
-        });
-      }
-
       return res.status(200).json({
         success: true,
         data: result,

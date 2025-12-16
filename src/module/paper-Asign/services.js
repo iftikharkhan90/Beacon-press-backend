@@ -15,6 +15,12 @@ module.exports = {
   getPaperAsignByIdService: async (journalUserId) => {
     return await PaperAsign.find({ journalUserId })
       .populate("manuscriptId")
-      .populate("journalUserId");
+      .populate({
+        path: "journalUserId",
+        populate: {
+          path: "userId",
+          select: "firstName lastName email", // jo fields chahiye wo likhein
+        },
+      });
   },
 };
