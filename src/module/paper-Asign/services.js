@@ -19,7 +19,7 @@ module.exports = {
         path: "journalUserId",
         populate: {
           path: "userId",
-          select: "firstName lastName email", // jo fields chahiye wo likhein
+          select: "firstName lastName email", 
         },
       });
   },
