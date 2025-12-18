@@ -1,26 +1,16 @@
-// modules/paperAsign/index.js
-
 const express = require("express");
 const router = express.Router();
 
-const { createPaperAsignController,getPaperAsignByIdController , updatePaperAsignController,deletePaperAsignController } = require("./controller");
-const { validatePaperAsign,validateUpdatePaperAsign } = require("../../middleWare/validation/Paper-asign/index");
-const { verifyTokenAndAttachUser } = require("../../middleWare/validation/auth");
+const {
+  createPaperAsignController,
+  getPaperAsignByJournalController,
+  updatePaperAsignController,
+  deletePaperAsignController,
+} = require("./controller");
 
-router.post(
-  "/create",
- [verifyTokenAndAttachUser ,validatePaperAsign,],
-  createPaperAsignController
-);
-router.get("/get",
-  // [ verifyTokenAndAttachUser] ,
-   getPaperAsignByIdController);
-
-
-router.patch("/update/:id", validateUpdatePaperAsign, updatePaperAsignController);
-
-router.delete("/delete/:id", [
-  verifyTokenAndAttachUser,
-], deletePaperAsignController);
+router.post("/create", createPaperAsignController);
+router.get("/get", getPaperAsignByJournalController);
+router.put("/update/:id", updatePaperAsignController);
+router.delete("/delete/:id", deletePaperAsignController);
 
 module.exports = router;
