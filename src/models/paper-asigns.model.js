@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const PaperAsignSchema = new mongoose.Schema(
+const PaperAssignSchema = new mongoose.Schema(
   {
     manuscriptId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -9,7 +9,7 @@ const PaperAsignSchema = new mongoose.Schema(
     },
     journalUserId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "journal-users", // ✅ MUST match JournalUser model
+      ref: "journal-users",
       required: true,
     },
     status: {
@@ -23,4 +23,4 @@ const PaperAsignSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("paper-asigns", PaperAsignSchema);
+module.exports = mongoose.model("paper-assigns", PaperAssignSchema);
