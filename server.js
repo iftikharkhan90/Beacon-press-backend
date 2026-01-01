@@ -21,7 +21,7 @@ app.use(
 );
 
 filePath(app);
-app.use("/files", express.static(path.join(__dirname, "src", "upload")));
+// app.use("/files", express.static(path.join(__dirname, "src", "upload")));
 
 mongoose
   .connect(mongoURL)
